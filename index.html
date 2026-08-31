@@ -419,7 +419,31 @@
         .replace(/\n/g, '\\n')
         .replace(/\r/g, '\\r');
     }
+function shareJob(job) {
+  const title = job.title || 'UK IT Job';
+  const company = job.company || '';
+  const location = job.location || '';
+  const applyUrl = job.apply_url || window.location.href;
 
+  const shareText =
+    `${title}${company ? ` at ${company}` : ''}${location ? ` — ${location}` : ''}`;
+
+  if (navigator.share) {
+    navigator.share({
+      title: title,
+      text: shareText,
+      url: applyUrl
+    }).catch(() => {});
+    return;
+  }
+
+  const whatsappUrl =
+    `https://api.whatsapp.com/send?text=${encodeURIComponent(
+      `${shareText}\n\nApply here: ${applyUrl}`
+    )}`;
+
+  window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+}
     async function fetchJobs() {
       const { data, error } = await supabaseClient
         .from('jobs')
@@ -476,7 +500,14 @@
                   <span class="text-sm">${isJobSaved(job) ? '♥' : '♡'}</span>
                   <span>${isJobSaved(job) ? 'Saved' : 'Save'}</span>
                 </button>
-
+                <button
+  onclick='shareJob(${JSON.stringify(job).replace(/'/g, "&#39;")})'
+  class="inline-flex items-center gap-1 px-2 py-1 rounded-lg border border-slate-200 bg-white text-slate-500 hover:bg-blue-50 hover:text-blue-700 text-[10px] font-semibold transition"
+  title="Share this job"
+>
+  <span class="text-sm">↗</span>
+  <span>Share</span>
+</button>
                 <span class="text-[10px] font-medium bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded border border-emerald-200">
                   IT
                 </span>
