@@ -436,9 +436,10 @@ const siteUrl = window.location.origin + window.location.pathname;
 const applyUrl = job.apply_url || '';
 const shareUrl =
   `${siteUrl}?job=${encodeURIComponent(job.title || '')}`;
-  const shareText =
-    `${title}${company ? ` at ${company}` : ''}${location ? ` — ${location}` : ''}`;
-
+const shareText =
+  `${title}${company ? ` at ${company}` : ''}${location ? ` — ${location}` : ''}\n\n` +
+  `View this job on UK IT Jobs:\n${shareUrl}\n\n` +
+  `Apply here:\n${applyUrl}`;
   if (navigator.share) {
     navigator.share({
       title: title,
@@ -448,11 +449,8 @@ const shareUrl =
     return;
   }
 
-  const whatsappUrl =
-    `https://api.whatsapp.com/send?text=${encodeURIComponent(
-`${shareText}\n\nView this job on UK IT Jobs:\n${shareUrl}\n\nApply here: ${applyUrl}`
-    )}`;
-
+const whatsappUrl =
+  `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
   window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
 }
     async function fetchJobs() {
