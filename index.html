@@ -3,12 +3,33 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- Primary Meta Tags -->
   <title>UK IT Jobs — Daily Tech Opportunities</title>
+  <meta name="title" content="UK IT Jobs — Daily Tech Opportunities" />
+  <meta name="description" content="Search hundreds of live UK IT & Tech vacancies updated hourly across Software, Cloud, DevOps, Cyber, and Support." />
+
+  <!-- Open Graph / Facebook / LinkedIn / WhatsApp -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://venubabu2620.github.io/UK-IT-JOBS/" />
+  <meta property="og:title" content="UK IT Jobs — Live Tech Opportunities 🇬🇧" />
+  <meta property="og:description" content="Direct application links for Software Engineers, DevOps, Cloud Architects, and IT specialists across the UK." />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1200&auto=format&fit=crop" />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://venubabu2620.github.io/UK-IT-JOBS/" />
+  <meta property="twitter:title" content="UK IT Jobs — Live Tech Opportunities 🇬🇧" />
+  <meta property="twitter:description" content="Direct application links for Software Engineers, DevOps, Cloud Architects, and IT specialists across the UK." />
+  <meta property="twitter:image" content="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1200&auto=format&fit=crop" />
+
+  <!-- Tailwind & Supabase Scripts -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col antialiased">
 
+  <!-- Sticky Header -->
   <header class="bg-white border-b border-slate-200 sticky top-0 z-20 shadow-sm">
     <div class="max-w-6xl mx-auto px-4 py-3.5 flex flex-wrap items-center justify-between gap-3">
       <div class="flex items-center gap-3">
@@ -20,7 +41,9 @@
         </span>
       </div>
 
+      <!-- 1-Click Share Buttons -->
       <div class="flex items-center gap-2">
+        <!-- WhatsApp -->
         <a
           href="https://api.whatsapp.com/send?text=Check%20out%20this%20free%20UK%20IT%20Job%20Board%20with%20live%20tech%20roles%3A%20https%3A%2F%2Fvenubabu2620.github.io%2FUK-IT-JOBS%2F"
           target="_blank"
@@ -33,6 +56,7 @@
           <span class="hidden md:inline">Share</span>
         </a>
 
+        <!-- LinkedIn -->
         <a
           href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fvenubabu2620.github.io%2FUK-IT-JOBS%2F"
           target="_blank"
@@ -45,6 +69,7 @@
           <span class="hidden md:inline">Post</span>
         </a>
 
+        <!-- Copy Link Button -->
         <button
           onclick="copySiteLink()"
           id="copyBtn"
@@ -59,6 +84,7 @@
     </div>
   </header>
 
+  <!-- Hero & Search -->
   <main class="max-w-6xl mx-auto px-4 py-8 flex-grow w-full">
     <div class="text-center max-w-xl mx-auto mb-8">
       <h2 class="text-3xl font-extrabold text-slate-900 mb-2">UK IT & Tech Opportunities</h2>
@@ -74,6 +100,7 @@
       </div>
     </div>
 
+    <!-- Job Cards Grid -->
     <div id="jobList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
       <div class="p-5 bg-white border border-slate-200 rounded-xl animate-pulse h-48"></div>
       <div class="p-5 bg-white border border-slate-200 rounded-xl animate-pulse h-48"></div>
