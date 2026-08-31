@@ -51,8 +51,22 @@
         </span>
       </div>
 
-      <!-- 1-Click Share Buttons -->
+      <!-- Saved Jobs + 1-Click Share Buttons -->
       <div class="flex items-center gap-2">
+
+        <!-- Saved Jobs -->
+        <button
+          onclick="showSavedJobs()"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 text-xs font-semibold rounded-lg border border-amber-200 transition"
+          title="View saved jobs"
+        >
+          <span class="text-sm">♥</span>
+          <span class="hidden sm:inline">Saved</span>
+          <span id="savedCount" class="bg-amber-200 text-amber-800 px-1.5 py-0.5 rounded-full text-[10px]">0</span>
+        </button>
+
+        <!-- 1-Click Share Buttons -->
+        <div class="flex items-center gap-2">
 
         <!-- WhatsApp -->
         <a
@@ -92,6 +106,7 @@
           <span id="copyBtnText">Copy Link</span>
         </button>
 
+        </div>
       </div>
     </div>
   </header>
@@ -192,6 +207,23 @@
 
     </div>
 
+    <!-- Saved Jobs Panel -->
+    <section id="savedJobsPanel" class="hidden mb-8 bg-amber-50 border border-amber-200 rounded-xl p-5">
+      <div class="flex items-center justify-between gap-3 mb-4">
+        <div>
+          <h3 class="text-lg font-bold text-slate-900">Saved Jobs</h3>
+          <p id="savedJobsSummary" class="text-xs text-slate-500 mt-1">Your saved jobs are stored in this browser.</p>
+        </div>
+        <button
+          onclick="hideSavedJobs()"
+          class="px-3 py-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 bg-white border border-slate-200 rounded-lg"
+        >
+          Back to Jobs
+        </button>
+      </div>
+      <div id="savedJobsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+    </section>
+
     <!-- Job Cards -->
     <div id="jobList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
 
@@ -219,6 +251,174 @@
 
     let allJobs = [];
     let activeFilter = 'all';
+
+    const SAVED_JOBS_KEY = 'uk_it_jobs_saved_jobs';
+
+    function getSavedJobs() {
+      try {
+        return JSON.parse(localStorage.getItem(SAVED_JOBS_KEY) || '[]');
+      } catch (error) {
+        console.error('Unable to read saved jobs:', error);
+        return [];
+      }
+    }
+
+    function saveSavedJobs(jobs) {
+      localStorage.setItem(SAVED_JOBS_KEY, JSON.stringify(jobs));
+      updateSavedCount();
+    }
+
+    function jobKey(job) {
+      return job.apply_url || job.id || `${job.title || ''}|${job.company || ''}|${job.location || ''}`;
+    }
+
+    function isJobSaved(job) {
+      const key = jobKey(job);
+      return getSavedJobs().some(saved => saved.key === key);
+    }
+
+    function toggleSaveJob(event, applyUrl) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const job = allJobs.find(item => (item.apply_url || '') === applyUrl);
+      if (!job) return;
+
+      const key = jobKey(job);
+      const saved = getSavedJobs();
+      const existingIndex = saved.findIndex(item => item.key === key);
+
+      if (existingIndex >= 0) {
+        saved.splice(existingIndex, 1);
+      } else {
+        saved.unshift({
+          key,
+          id: job.id || null,
+          title: job.title || 'Untitled role',
+          company: job.company || 'Unknown company',
+          location: job.location || 'United Kingdom',
+          job_description: job.job_description || '',
+          apply_url: job.apply_url || '#',
+          created_at: job.created_at || null
+        });
+      }
+
+      saveSavedJobs(saved);
+      filterAndRender();
+
+      if (!document.getElementById('savedJobsPanel').classList.contains('hidden')) {
+        renderSavedJobs();
+      }
+    }
+
+    function updateSavedCount() {
+      document.getElementById('savedCount').innerText = getSavedJobs().length;
+    }
+
+    function showSavedJobs() {
+      document.getElementById('savedJobsPanel').classList.remove('hidden');
+      document.getElementById('jobList').classList.add('hidden');
+      document.getElementById('savedJobsPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      renderSavedJobs();
+    }
+
+    function hideSavedJobs() {
+      document.getElementById('savedJobsPanel').classList.add('hidden');
+      document.getElementById('jobList').classList.remove('hidden');
+    }
+
+    function removeSavedJob(event, key) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const saved = getSavedJobs().filter(job => job.key !== key);
+      saveSavedJobs(saved);
+      renderSavedJobs();
+      filterAndRender();
+    }
+
+    function renderSavedJobs() {
+      const container = document.getElementById('savedJobsList');
+      const summary = document.getElementById('savedJobsSummary');
+      const saved = getSavedJobs();
+
+      summary.innerText = `${saved.length} saved ${saved.length === 1 ? 'job' : 'jobs'} — stored in this browser`;
+
+      if (saved.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full text-center py-10 bg-white border border-dashed border-amber-300 rounded-xl">
+            <div class="text-3xl mb-2">♡</div>
+            <p class="font-semibold text-slate-700">No saved jobs yet</p>
+            <p class="text-xs text-slate-500 mt-1">Click “Save” on any job you want to keep.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = saved.map(job => `
+        <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-start justify-between gap-2 mb-2">
+              <h3 class="font-semibold text-slate-900 line-clamp-2">
+                ${escapeHtml(job.title)}
+              </h3>
+              <button
+                onclick="removeSavedJob(event, '${escapeJs(job.key)}')"
+                class="text-amber-600 hover:text-red-600 text-lg shrink-0"
+                title="Remove saved job"
+              >♥</button>
+            </div>
+
+            <p class="text-xs font-medium text-emerald-600 mb-1">
+              ${escapeHtml(job.company)}
+            </p>
+
+            <p class="text-xs text-slate-400 mb-3">
+              📍 ${escapeHtml(job.location)}
+            </p>
+
+            <p class="text-xs text-slate-600 line-clamp-3 mb-4 leading-relaxed">
+              ${escapeHtml(job.job_description || 'No description available.')}
+            </p>
+          </div>
+
+          <div class="flex gap-2">
+            <button
+              onclick="removeSavedJob(event, '${escapeJs(job.key)}')"
+              class="flex-1 py-2 bg-white hover:bg-slate-50 text-slate-600 text-xs font-medium rounded-lg border border-slate-200 transition"
+            >
+              Remove
+            </button>
+
+            <a
+              href="${escapeHtml(job.apply_url || '#')}"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex-1 block text-center py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium rounded-lg transition"
+            >
+              Apply Now →
+            </a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function escapeJs(value) {
+      return String(value ?? '')
+        .replace(/\\/g, '\\\\')
+        .replace(/'/g, "\\'")
+        .replace(/\n/g, '\\n')
+        .replace(/\r/g, '\\r');
+    }
 
     async function fetchJobs() {
       const { data, error } = await supabaseClient
@@ -263,32 +463,43 @@
 
             <div class="flex items-start justify-between gap-2 mb-2">
 
-              <h3 class="font-semibold text-slate-900 line-clamp-1">
-                ${job.title}
+              <h3 class="font-semibold text-slate-900 line-clamp-1 pr-1">
+                ${escapeHtml(job.title || 'Untitled role')}
               </h3>
 
-              <span class="text-[10px] font-medium bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded border border-emerald-200">
-                IT
-              </span>
+              <div class="flex items-center gap-1.5 shrink-0">
+                <button
+                  onclick="toggleSaveJob(event, '${escapeJs(job.apply_url || '')}')"
+                  class="save-job-btn inline-flex items-center gap-1 px-2 py-1 rounded-lg border text-[10px] font-semibold transition ${isJobSaved(job) ? 'bg-amber-100 text-amber-700 border-amber-300' : 'bg-white text-slate-500 border-slate-200 hover:bg-amber-50 hover:text-amber-700'}"
+                  title="${isJobSaved(job) ? 'Remove from saved jobs' : 'Save this job'}"
+                >
+                  <span class="text-sm">${isJobSaved(job) ? '♥' : '♡'}</span>
+                  <span>${isJobSaved(job) ? 'Saved' : 'Save'}</span>
+                </button>
+
+                <span class="text-[10px] font-medium bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded border border-emerald-200">
+                  IT
+                </span>
+              </div>
 
             </div>
 
             <p class="text-xs font-medium text-emerald-600 mb-1">
-              ${job.company}
+              ${escapeHtml(job.company || 'Unknown company')}
             </p>
 
             <p class="text-xs text-slate-400 mb-3">
-              📍 ${job.location || 'United Kingdom'}
+              📍 ${escapeHtml(job.location || 'United Kingdom')}
             </p>
 
             <p class="text-xs text-slate-600 line-clamp-3 mb-4 leading-relaxed">
-              ${job.job_description}
+              ${escapeHtml(job.job_description || 'No description available.')}
             </p>
 
           </div>
 
           <a
-            href="${job.apply_url}"
+            href="${escapeHtml(job.apply_url || '#')}"
             target="_blank"
             rel="noopener noreferrer"
             class="block text-center w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium rounded-lg transition"
@@ -422,6 +633,7 @@
       });
     }
 
+    updateSavedCount();
     fetchJobs();
   </script>
 
