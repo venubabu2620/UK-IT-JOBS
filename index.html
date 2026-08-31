@@ -531,8 +531,18 @@ const whatsappUrl =
             <p class="text-xs text-slate-400 mb-3">
               📍 ${escapeHtml(job.location || 'United Kingdom')}
             </p>
-
-            <p class="text-xs text-slate-600 line-clamp-3 mb-4 leading-relaxed">
+<p class="text-xs font-semibold text-emerald-700 mb-3">
+  💰 ${
+    job.salary_min && job.salary_max
+      ? `£${Number(job.salary_min).toLocaleString()} - £${Number(job.salary_max).toLocaleString()}`
+      : job.salary_max
+        ? `Up to £${Number(job.salary_max).toLocaleString()}`
+        : job.salary_min
+          ? `From £${Number(job.salary_min).toLocaleString()}`
+          : 'Salary not disclosed'
+  }
+</p>
+              <p class="text-xs text-slate-600 line-clamp-3 mb-4 leading-relaxed">                               
               ${escapeHtml(job.job_description || 'No description available.')}
             </p>
 
