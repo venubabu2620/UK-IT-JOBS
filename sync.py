@@ -134,13 +134,20 @@ def send_job_alerts():
                 </li>
                 """
 
+
+            unsubscribe_url = (
+                "https://mjmbpjulosdywzperdhe.supabase.co"
+                "/functions/v1/unsubscribe-alert"
+                f"?token={alert.get('unsubscribe_token', '')}"
+            )
+
             html = f"""
             <html>
-            <body>
+            <body style="font-family: Arial, sans-serif; color: #0f172a;">
                 <h2>New UK IT Jobs matching your alert</h2>
 
                 <p>
-                    We found {len(matching_jobs)}
+                    We found <strong>{len(matching_jobs)}</strong>
                     job(s) matching your alert.
                 </p>
 
@@ -152,9 +159,20 @@ def send_job_alerts():
                     You're receiving this email because you created
                     a job alert on UK IT Jobs.
                 </p>
+
+                <hr style="border:0;border-top:1px solid #e2e8f0;margin:24px 0;">
+
+                <p style="font-size:12px;color:#64748b;">
+                    Don't want these emails anymore?
+                    <a href="{unsubscribe_url}"
+                       style="color:#059669;">
+                        Unsubscribe from this job alert
+                    </a>
+                </p>
             </body>
             </html>
             """
+
 
             try:
                 resend.Emails.send({
