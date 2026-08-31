@@ -224,13 +224,14 @@ def sync_high_volume_it_jobs():
         except Exception as e:
             print(f"Error fetching '{query}': {e}")
 
-print(f"\nBatch complete! Upserted {total_added} IT listings.")
+    print(f"\nBatch complete! Upserted {total_added} IT listings.")
 
-# Run auto-cleanup at the end of each sync run
-clean_expired_jobs(days=30)
+    # Run auto-cleanup at the end of each sync run
+    clean_expired_jobs(days=30)
 
-# Send matching job alerts
-send_job_alerts()
+    # Send matching job alerts
+    send_job_alerts()
+
 
 if __name__ == "__main__":
     sync_high_volume_it_jobs()
