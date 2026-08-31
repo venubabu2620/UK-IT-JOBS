@@ -212,7 +212,7 @@ def extract_salary(description):
     if "competitive" in text_lower and not re.search(r"£\s*\d", text):
         return None, None
 
-    # £50k - £60k / £50,000 - £60,000
+    # £50k - £60k / £50,000 - £60,000 / £50k to £60k
     match = re.search(
         r"£\s*(\d+(?:\.\d+)?)\s*(k)?\s*(?:-|–|to)\s*£?\s*(\d+(?:\.\d+)?)\s*(k)?",
         text,
@@ -221,12 +221,12 @@ def extract_salary(description):
 
     if match:
         low = float(match.group(1))
-        high = float(match.group(4))
+        high = float(match.group(3))
 
         if match.group(2):
             low *= 1000
 
-        if match.group(5):
+        if match.group(4):
             high *= 1000
 
         return int(low), int(high)
@@ -246,7 +246,7 @@ def extract_salary(description):
 
         return None, int(high)
 
-    # Circa £50,000 / Salary: £50,000
+    # Circa £50,000 / Salary: £50,000 / Salary £50k
     match = re.search(
         r"(?:circa|salary|pay|package|£)\s*:?\s*£?\s*(\d+(?:\.\d+)?)\s*(k)?",
         text_lower,
@@ -262,6 +262,7 @@ def extract_salary(description):
         return int(value), int(value)
 
     return None, None
+
 
 def sync_high_volume_it_jobs():
     total_added = 0
