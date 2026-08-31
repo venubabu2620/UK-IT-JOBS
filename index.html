@@ -9,7 +9,6 @@
 </head>
 <body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col antialiased">
 
-  <!-- Sticky Header -->
   <header class="bg-white border-b border-slate-200 sticky top-0 z-20 shadow-sm">
     <div class="max-w-6xl mx-auto px-4 py-3.5 flex flex-wrap items-center justify-between gap-3">
       <div class="flex items-center gap-3">
@@ -17,15 +16,13 @@
           UK<span class="text-emerald-600">IT</span> Jobs
         </h1>
         <span class="hidden sm:inline-block text-xs bg-emerald-100 text-emerald-800 font-semibold px-2.5 py-1 rounded-full">
-          🇬🇧 500+ Daily Tech Roles
+          🇬🇧 High-Volume Tech Board
         </span>
       </div>
 
-      <!-- 1-Click Share Buttons -->
       <div class="flex items-center gap-2">
-        <!-- WhatsApp -->
         <a
-          href="https://api.whatsapp.com/send?text=Check%20out%20this%20free%20UK%20IT%20Job%20Board%20with%20500%2B%20daily%20tech%20roles%3A%20https%3A%2F%2Fvenubabu2620.github.io%2FUK-IT-JOBS%2F"
+          href="https://api.whatsapp.com/send?text=Check%20out%20this%20free%20UK%20IT%20Job%20Board%20with%20live%20tech%20roles%3A%20https%3A%2F%2Fvenubabu2620.github.io%2FUK-IT-JOBS%2F"
           target="_blank"
           rel="noopener noreferrer"
           class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-semibold rounded-lg shadow-sm transition"
@@ -36,7 +33,6 @@
           <span class="hidden md:inline">Share</span>
         </a>
 
-        <!-- LinkedIn -->
         <a
           href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fvenubabu2620.github.io%2FUK-IT-JOBS%2F"
           target="_blank"
@@ -49,7 +45,6 @@
           <span class="hidden md:inline">Post</span>
         </a>
 
-        <!-- Copy Link Button -->
         <button
           onclick="copySiteLink()"
           id="copyBtn"
@@ -64,7 +59,6 @@
     </div>
   </header>
 
-  <!-- Hero & Search -->
   <main class="max-w-6xl mx-auto px-4 py-8 flex-grow w-full">
     <div class="text-center max-w-xl mx-auto mb-8">
       <h2 class="text-3xl font-extrabold text-slate-900 mb-2">UK IT & Tech Opportunities</h2>
@@ -80,7 +74,6 @@
       </div>
     </div>
 
-    <!-- Job Cards Grid -->
     <div id="jobList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
       <div class="p-5 bg-white border border-slate-200 rounded-xl animate-pulse h-48"></div>
       <div class="p-5 bg-white border border-slate-200 rounded-xl animate-pulse h-48"></div>
@@ -104,7 +97,7 @@
         .from('jobs')
         .select('*')
         .order('created_at', { ascending: false })
-        .limit(600);
+        .limit(2000);
 
       if (error) {
         console.error("Error fetching jobs:", error);
