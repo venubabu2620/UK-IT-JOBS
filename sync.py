@@ -199,6 +199,70 @@ def send_job_alerts():
     except Exception as e:
         print(f"Job alert processing failed: {e}")
 
+def extract_salary(description):
+    import re
+
+    if not description:
+        return None, None
+
+    text = description.replace(",", "")
+    text_lower = text.lower()
+
+    # Ignore clearly competitive / undisclosed salaries
+    if "competitive" in text_lower and not re.search(r"£\s*\d", text):
+        return None, None
+
+    # £50k - £60k / £50,000 - £60,000
+    match = re.search(
+        r"£\s*(\d+(?:\.\d+)?)\s*(k)?\s*(?:-|–|to)\s*£?\s*(\d+(?:\.\d+)?)\s*(k)?",
+        text,
+        re.IGNORECASE
+    )
+
+    if match:
+        low = float(match.group(1))
+        high = float(match.group(4))
+
+        if match.group(2):
+            low *= 1000
+
+        if match.group(5):
+            high *= 1000
+
+        return int(low), int(high)
+
+    # Up to £65,000 / up to £65k
+    match = re.search(
+        r"\bup\s+to\s+£\s*(\d+(?:\.\d+)?)\s*(k)?",
+        text_lower,
+        re.IGNORECASE
+    )
+
+    if match:
+        high = float(match.group(1))
+
+        if match.group(2):
+            high *= 1000
+
+        return None, int(high)
+
+    # Circa £50,000 / Salary: £50,000
+    match = re.search(
+        r"(?:circa|salary|pay|package|£)\s*:?\s*£?\s*(\d+(?:\.\d+)?)\s*(k)?",
+        text_lower,
+        re.IGNORECASE
+    )
+
+    if match:
+        value = float(match.group(1))
+
+        if match.group(2):
+            value *= 1000
+
+        return int(value), int(value)
+
+    return None, None
+
 def sync_high_volume_it_jobs():
     total_added = 0
     print("Starting max-yield IT job harvesting across UK...")
@@ -232,6 +296,10 @@ def sync_high_volume_it_jobs():
                     .replace("</strong>", "")
                 )
 
+                salary_min, salary_max = extract_salary(
+                    item.get("description", "")
+                )
+
                 record = {
                     "title": title,
                     "company": item.get("company", {}).get(
@@ -244,9 +312,9 @@ def sync_high_volume_it_jobs():
                     ),
                     "job_description": item.get("description", ""),
                     "apply_url": item.get("redirect_url"),
-                    "salary_min": item.get("salary_min"),
-                    "salary_max": item.get("salary_max")
-                }
+                    "salary_min": salary_min,
+                    "salary_max": salary_max
+                    }
 
                 supabase.table("jobs").upsert(
                     record,
