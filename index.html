@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta property="og:site_name" content="UK IT Jobs">
+<meta property="og:type" content="website">
+<meta property="og:title" content="UK IT Jobs — Latest Technology Jobs in the UK">
+<meta property="og:description" content="Find the latest IT, software, developer, data, cloud and technology jobs across the UK.">
+<meta property="og:url" content="https://venubabu2620.github.io/UK-IT-JOBS/">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="UK IT Jobs — Latest Technology Jobs in the UK">
+<meta name="twitter:description" content="Find the latest IT and technology jobs across the UK.">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -423,8 +432,10 @@ function shareJob(job) {
   const title = job.title || 'UK IT Job';
   const company = job.company || '';
   const location = job.location || '';
-  const applyUrl = job.apply_url || window.location.href;
-
+const siteUrl = window.location.origin + window.location.pathname;
+const applyUrl = job.apply_url || '';
+const shareUrl =
+  `${siteUrl}?job=${encodeURIComponent(job.title || '')}`;
   const shareText =
     `${title}${company ? ` at ${company}` : ''}${location ? ` — ${location}` : ''}`;
 
@@ -432,14 +443,14 @@ function shareJob(job) {
     navigator.share({
       title: title,
       text: shareText,
-      url: applyUrl
+      url: shareUrl
     }).catch(() => {});
     return;
   }
 
   const whatsappUrl =
     `https://api.whatsapp.com/send?text=${encodeURIComponent(
-      `${shareText}\n\nApply here: ${applyUrl}`
+`${shareText}\n\nView this job on UK IT Jobs:\n${shareUrl}\n\nApply here: ${applyUrl}`
     )}`;
 
   window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
