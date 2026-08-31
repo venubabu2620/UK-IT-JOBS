@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UK Job Board — Daily Opportunities</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-10">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+      <h1 class="text-xl font-bold tracking-tight text-slate-800">
+        UK<span class="text-emerald-600">Jobs</span> Daily
+      </h1>
+      <span class="text-xs bg-emerald-100 text-emerald-800 font-semibold px-2.5 py-1 rounded-full">
+        🇬🇧 England • Scotland • Wales • NI
+      </span>
+    </div>
+  </header>
+
+  <!-- Hero & Search -->
+  <main class="max-w-6xl mx-auto px-4 py-8 flex-grow w-full">
+    <div class="text-center max-w-xl mx-auto mb-8">
+      <h2 class="text-3xl font-extrabold text-slate-900 mb-2">Find Your Next UK Role</h2>
+      <p class="text-sm text-slate-500">Updated daily with direct application links.</p>
+      
+      <div class="mt-5 flex gap-2">
+        <input
+          id="searchInput"
+          type="text"
+          placeholder="Search by title, company, or city..."
+          class="w-full px-4 py-2.5 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+        />
+      </div>
+    </div>
+
+    <!-- Job Cards Grid -->
+    <div id="jobList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div class="p-5 bg-white border border-slate-200 rounded-xl animate-pulse h-48"></div>
+      <div class="p-5 bg-white border border-slate-200 rounded-xl animate-pulse h-48"></div>
+      <div class="p-5 bg-white border border-slate-200 rounded-xl animate-pulse h-48"></div>
+    </div>
+  </main>
+
+  <footer class="text-center py-6 text-xs text-slate-400 border-t border-slate-200 bg-white">
+    © 2026 UKJobs Daily. All rights reserved.
+  </footer>
+
+  <script>
+    const SUPABASE_URL = "https://mjmbpjulosdywzperdhe.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_voOWFppdSdr1LJPcelmGSQ_74FqLmKK";
+
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    let allJobs = [];
+
+    async function fetchJobs() {
+      const { data, error } = await supabaseClient
+        .from('jobs')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(60);
+
+      if (error) {
+        console.error("Error fetching jobs:", error);
+        document.getElementById('jobList').innerHTML = '<p class="col-span-full text-center text-red-500 py-10">Error loading jobs: ' + error.message + '</p>';
+        return;
+      }
+
+      allJobs = data || [];
+      renderJobs(allJobs);
+    }
+
+    function renderJobs(jobs) {
+      const container = document.getElementById('jobList');
+      if (jobs.length === 0) {
+        container.innerHTML = '<p class="col-span-full text-center text-slate-500 py-10">No jobs found in the database.</p>';
+        return;
+      }
+
+      container.innerHTML = jobs.map(job => `
+        <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm hover:shadow transition flex flex-col justify-between">
+          <div>
+            <div class="flex items-start justify-between gap-2 mb-2">
+              <h3 class="font-semibold text-slate-900 line-clamp-1">${job.title}</h3>
+              <span class="text-[10px] font-medium bg-slate-100 text-slate-600 px-2 py-0.5 rounded">UK Only</span>
+            </div>
+            <p class="text-xs font-medium text-emerald-600 mb-1">${job.company}</p>
+            <p class="text-xs text-slate-400 mb-3">📍 ${job.location || 'United Kingdom'}</p>
+            <p class="text-xs text-slate-600 line-clamp-3 mb-4 leading-relaxed">${job.job_description}</p>
+          </div>
+          <a
+            href="${job.apply_url}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="block text-center w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium rounded-lg transition"
+          >
+            Apply Now &rarr;
+          </a>
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      const term = e.target.value.toLowerCase();
+      const filtered = allJobs.filter(job => 
+        (job.title && job.title.toLowerCase().includes(term)) ||
+        (job.company && job.company.toLowerCase().includes(term)) ||
+        (job.location && job.location.toLowerCase().includes(term))
+      );
+      renderJobs(filtered);
+    });
+
+    fetchJobs();
+  </script>
+</body>
+</html>
