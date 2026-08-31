@@ -205,7 +205,7 @@ def sync_high_volume_it_jobs():
 
     for query in IT_KEYWORDS:
         print(f"Fetching IT vacancies for keyword: '{query}'...")
-        
+
         url = (
             f"https://api.adzuna.com/v1/api/jobs/gb/search/1"
             f"?app_id={ADZUNA_ID}"
@@ -218,23 +218,41 @@ def sync_high_volume_it_jobs():
 
         try:
             res = requests.get(url, timeout=15)
+
             if res.status_code != 200:
                 print(f"Failed query '{query}': HTTP {res.status_code}")
                 continue
 
             results = res.json().get("results", [])
+
             for item in results:
-                title = item.get("title", "").replace("<strong>", "").replace("</strong>", "")
-                
+                title = (
+                    item.get("title", "")
+                    .replace("<strong>", "")
+                    .replace("</strong>", "")
+                )
+
                 record = {
                     "title": title,
-                    "company": item.get("company", {}).get("display_name", "Confidential"),
-                    "location": item.get("location", {}).get("display_name", "United Kingdom"),
+                    "company": item.get("company", {}).get(
+                        "display_name",
+                        "Confidential"
+                    ),
+                    "location": item.get("location", {}).get(
+                        "display_name",
+                        "United Kingdom"
+                    ),
                     "job_description": item.get("description", ""),
-                    "apply_url": item.get("redirect_url")
+                    "apply_url": item.get("redirect_url"),
+                    "salary_min": item.get("salary_min"),
+                    "salary_max": item.get("salary_max")
                 }
 
-                supabase.table("jobs").upsert(record, on_conflict="apply_url").execute()
+                supabase.table("jobs").upsert(
+                    record,
+                    on_conflict="apply_url"
+                ).execute()
+
                 total_added += 1
 
             time.sleep(0.5)
