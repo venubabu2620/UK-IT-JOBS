@@ -84,19 +84,49 @@
     </div>
   </header>
 
-  <!-- Hero & Search -->
+  <!-- Hero & Filter Section -->
   <main class="max-w-6xl mx-auto px-4 py-8 flex-grow w-full">
-    <div class="text-center max-w-xl mx-auto mb-8">
+    <div class="text-center max-w-2xl mx-auto mb-8">
       <h2 class="text-3xl font-extrabold text-slate-900 mb-2">UK IT & Tech Opportunities</h2>
-      <p class="text-sm text-slate-500">Aggregated daily across Software, Cloud, DevOps, Data & Support.</p>
+      <p class="text-sm text-slate-500 mb-6">Aggregated daily across Software, Cloud, DevOps, Data & Support.</p>
       
-      <div class="mt-5 flex gap-2">
+      <!-- Search Input -->
+      <div class="relative max-w-xl mx-auto mb-4">
         <input
           id="searchInput"
           type="text"
-          placeholder="Search by role (e.g. Python, DevOps, Data), company, or city..."
-          class="w-full px-4 py-2.5 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white shadow-sm"
+          placeholder="Search by keywords, job title, company, or tech stack..."
+          class="w-full pl-4 pr-10 py-3 text-sm border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white shadow-sm"
         />
+        <svg class="w-5 h-5 absolute right-3.5 top-3 text-slate-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+      </div>
+
+      <!-- Quick Category Filter Chips -->
+      <div class="flex flex-wrap justify-center gap-1.5 text-xs mb-3">
+        <button onclick="applyChipFilter('all')" class="filter-chip active-chip px-3 py-1.5 rounded-full border border-slate-200 bg-slate-900 text-white font-medium transition">All Roles</button>
+        <button onclick="applyChipFilter('remote')" class="filter-chip px-3 py-1.5 rounded-full border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 font-medium transition">🏠 Remote</button>
+        <button onclick="applyChipFilter('developer')" class="filter-chip px-3 py-1.5 rounded-full border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 font-medium transition">💻 Software / Dev</button>
+        <button onclick="applyChipFilter('devops')" class="filter-chip px-3 py-1.5 rounded-full border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 font-medium transition">☁️ Cloud / DevOps</button>
+        <button onclick="applyChipFilter('data')" class="filter-chip px-3 py-1.5 rounded-full border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 font-medium transition">📊 Data / AI</button>
+        <button onclick="applyChipFilter('cyber')" class="filter-chip px-3 py-1.5 rounded-full border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 font-medium transition">🔒 Cyber Security</button>
+        <button onclick="applyChipFilter('support')" class="filter-chip px-3 py-1.5 rounded-full border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 font-medium transition">🛠️ IT Support</button>
+      </div>
+
+      <!-- City Quick Filter -->
+      <div class="flex flex-wrap justify-center gap-1.5 text-xs">
+        <span class="text-slate-400 py-1 text-[11px] self-center">Popular Locations:</span>
+        <button onclick="applyCityFilter('London')" class="text-emerald-700 hover:underline bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">London</button>
+        <button onclick="applyCityFilter('Manchester')" class="text-emerald-700 hover:underline bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">Manchester</button>
+        <button onclick="applyCityFilter('Birmingham')" class="text-emerald-700 hover:underline bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">Birmingham</button>
+        <button onclick="applyCityFilter('Bristol')" class="text-emerald-700 hover:underline bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">Bristol</button>
+        <button onclick="applyCityFilter('Edinburgh')" class="text-emerald-700 hover:underline bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">Edinburgh</button>
+      </div>
+
+      <!-- Result Count Bar -->
+      <div class="mt-4 text-xs font-medium text-slate-500" id="resultsCount">
+        Loading live opportunities...
       </div>
     </div>
 
@@ -118,6 +148,7 @@
 
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     let allJobs = [];
+    let activeFilter = 'all';
 
     async function fetchJobs() {
       const { data, error } = await supabaseClient
@@ -133,13 +164,17 @@
       }
 
       allJobs = data || [];
-      renderJobs(allJobs);
+      filterAndRender();
     }
 
     function renderJobs(jobs) {
       const container = document.getElementById('jobList');
+      const countEl = document.getElementById('resultsCount');
+
+      countEl.innerText = `Showing ${jobs.length} available tech roles`;
+
       if (jobs.length === 0) {
-        container.innerHTML = '<p class="col-span-full text-center text-slate-500 py-10">No matching IT jobs found.</p>';
+        container.innerHTML = '<p class="col-span-full text-center text-slate-500 py-10">No matching IT jobs found for this search/filter.</p>';
         return;
       }
 
@@ -166,15 +201,52 @@
       `).join('');
     }
 
-    document.getElementById('searchInput').addEventListener('input', (e) => {
-      const term = e.target.value.toLowerCase();
-      const filtered = allJobs.filter(job => 
-        (job.title && job.title.toLowerCase().includes(term)) ||
-        (job.company && job.company.toLowerCase().includes(term)) ||
-        (job.location && job.location.toLowerCase().includes(term))
-      );
+    function filterAndRender() {
+      const searchVal = document.getElementById('searchInput').value.toLowerCase().trim();
+      
+      let filtered = allJobs.filter(job => {
+        const text = `${job.title || ''} ${job.company || ''} ${job.location || ''} ${job.job_description || ''}`.toLowerCase();
+        
+        const matchesSearch = !searchVal || text.includes(searchVal);
+        
+        let matchesChip = true;
+        if (activeFilter === 'remote') {
+          matchesChip = text.includes('remote') || text.includes('hybrid') || text.includes('work from home');
+        } else if (activeFilter === 'developer') {
+          matchesChip = text.includes('developer') || text.includes('software') || text.includes('frontend') || text.includes('backend') || text.includes('full stack');
+        } else if (activeFilter === 'devops') {
+          matchesChip = text.includes('devops') || text.includes('cloud') || text.includes('aws') || text.includes('azure') || text.includes('infrastructure');
+        } else if (activeFilter === 'data') {
+          matchesChip = text.includes('data') || text.includes('ai') || text.includes('machine learning') || text.includes('analytics');
+        } else if (activeFilter === 'cyber') {
+          matchesChip = text.includes('security') || text.includes('cyber') || text.includes('soc') || text.includes('penetration');
+        } else if (activeFilter === 'support') {
+          matchesChip = text.includes('support') || text.includes('helpdesk') || text.includes('administrator') || text.includes('service desk');
+        }
+
+        return matchesSearch && matchesChip;
+      });
+
       renderJobs(filtered);
-    });
+    }
+
+    function applyChipFilter(filterType) {
+      activeFilter = filterType;
+      document.querySelectorAll('.filter-chip').forEach(btn => {
+        btn.classList.remove('bg-slate-900', 'text-white');
+        btn.classList.add('bg-white', 'text-slate-700');
+      });
+      event.target.classList.add('bg-slate-900', 'text-white');
+      event.target.classList.remove('bg-white', 'text-slate-700');
+      filterAndRender();
+    }
+
+    function applyCityFilter(cityName) {
+      document.getElementById('searchInput').value = cityName;
+      filterAndRender();
+    }
+
+    document.getElementById('searchInput').addEventListener('input', filterAndRender);
 
     function copySiteLink() {
       const siteUrl = "https://venubabu2620.github.io/UK-IT-JOBS/";
