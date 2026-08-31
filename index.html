@@ -3,36 +3,79 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>UK Job Board — Daily Opportunities</title>
+  <title>UK IT Jobs — Daily Tech Opportunities</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col">
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col antialiased">
 
-  <!-- Header -->
-  <header class="bg-white border-b border-slate-200 sticky top-0 z-10">
-    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-      <h1 class="text-xl font-bold tracking-tight text-slate-800">
-        UK<span class="text-emerald-600">Jobs</span> Daily
-      </h1>
-      <span class="text-xs bg-emerald-100 text-emerald-800 font-semibold px-2.5 py-1 rounded-full">
-        🇬🇧 England • Scotland • Wales • NI
-      </span>
+  <!-- Sticky Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-20 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-3.5 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <h1 class="text-xl font-bold tracking-tight text-slate-800">
+          UK<span class="text-emerald-600">IT</span> Jobs
+        </h1>
+        <span class="hidden sm:inline-block text-xs bg-emerald-100 text-emerald-800 font-semibold px-2.5 py-1 rounded-full">
+          🇬🇧 500+ Daily Tech Roles
+        </span>
+      </div>
+
+      <!-- 1-Click Share Buttons -->
+      <div class="flex items-center gap-2">
+        <!-- WhatsApp -->
+        <a
+          href="https://api.whatsapp.com/send?text=Check%20out%20this%20free%20UK%20IT%20Job%20Board%20with%20500%2B%20daily%20tech%20roles%3A%20https%3A%2F%2Fvenubabu2620.github.io%2FUK-IT-JOBS%2F"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-semibold rounded-lg shadow-sm transition"
+        >
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
+          </svg>
+          <span class="hidden md:inline">Share</span>
+        </a>
+
+        <!-- LinkedIn -->
+        <a
+          href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fvenubabu2620.github.io%2FUK-IT-JOBS%2F"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#0A66C2] hover:bg-[#084e96] text-white text-xs font-semibold rounded-lg shadow-sm transition"
+        >
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+          </svg>
+          <span class="hidden md:inline">Post</span>
+        </a>
+
+        <!-- Copy Link Button -->
+        <button
+          onclick="copySiteLink()"
+          id="copyBtn"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold rounded-lg shadow-sm transition"
+        >
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+          </svg>
+          <span id="copyBtnText">Copy Link</span>
+        </button>
+      </div>
     </div>
   </header>
 
   <!-- Hero & Search -->
   <main class="max-w-6xl mx-auto px-4 py-8 flex-grow w-full">
     <div class="text-center max-w-xl mx-auto mb-8">
-      <h2 class="text-3xl font-extrabold text-slate-900 mb-2">Find Your Next UK Role</h2>
-      <p class="text-sm text-slate-500">Updated daily with direct application links.</p>
+      <h2 class="text-3xl font-extrabold text-slate-900 mb-2">UK IT & Tech Opportunities</h2>
+      <p class="text-sm text-slate-500">Aggregated daily across Software, Cloud, DevOps, Data & Support.</p>
       
       <div class="mt-5 flex gap-2">
         <input
           id="searchInput"
           type="text"
-          placeholder="Search by title, company, or city..."
-          class="w-full px-4 py-2.5 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+          placeholder="Search by role (e.g. Python, DevOps, Data), company, or city..."
+          class="w-full px-4 py-2.5 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white shadow-sm"
         />
       </div>
     </div>
@@ -46,7 +89,7 @@
   </main>
 
   <footer class="text-center py-6 text-xs text-slate-400 border-t border-slate-200 bg-white">
-    © 2026 UKJobs Daily. All rights reserved.
+    © 2026 UK IT Jobs Daily. Direct application links.
   </footer>
 
   <script>
@@ -61,7 +104,7 @@
         .from('jobs')
         .select('*')
         .order('created_at', { ascending: false })
-        .limit(60);
+        .limit(600);
 
       if (error) {
         console.error("Error fetching jobs:", error);
@@ -76,16 +119,16 @@
     function renderJobs(jobs) {
       const container = document.getElementById('jobList');
       if (jobs.length === 0) {
-        container.innerHTML = '<p class="col-span-full text-center text-slate-500 py-10">No jobs found in the database.</p>';
+        container.innerHTML = '<p class="col-span-full text-center text-slate-500 py-10">No matching IT jobs found.</p>';
         return;
       }
 
       container.innerHTML = jobs.map(job => `
-        <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm hover:shadow transition flex flex-col justify-between">
+        <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm hover:shadow-md transition flex flex-col justify-between">
           <div>
             <div class="flex items-start justify-between gap-2 mb-2">
               <h3 class="font-semibold text-slate-900 line-clamp-1">${job.title}</h3>
-              <span class="text-[10px] font-medium bg-slate-100 text-slate-600 px-2 py-0.5 rounded">UK Only</span>
+              <span class="text-[10px] font-medium bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded border border-emerald-200">IT</span>
             </div>
             <p class="text-xs font-medium text-emerald-600 mb-1">${job.company}</p>
             <p class="text-xs text-slate-400 mb-3">📍 ${job.location || 'United Kingdom'}</p>
@@ -112,6 +155,17 @@
       );
       renderJobs(filtered);
     });
+
+    function copySiteLink() {
+      const siteUrl = "https://venubabu2620.github.io/UK-IT-JOBS/";
+      navigator.clipboard.writeText(siteUrl).then(() => {
+        const btnText = document.getElementById('copyBtnText');
+        btnText.innerText = "Copied! ✓";
+        setTimeout(() => {
+          btnText.innerText = "Copy Link";
+        }, 2000);
+      });
+    }
 
     fetchJobs();
   </script>
