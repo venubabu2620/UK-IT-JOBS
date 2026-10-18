@@ -68,11 +68,9 @@
     <div class="max-w-6xl mx-auto px-4 py-3.5 flex flex-wrap items-center justify-between gap-3">
 
       <div class="flex items-center gap-3">
-       <a href="/UK-IT-JOBS/"
-   class="text-xl font-bold tracking-tight text-slate-800 hover:opacity-80 transition"
-   aria-label="UK IT Jobs homepage">
-  UK<span class="text-emerald-600">IT</span> Jobs
-</a>
+        <h1 class="text-xl font-bold tracking-tight text-slate-800">
+          UK<span class="text-emerald-600">IT</span> Jobs
+        </h1>
 
         <span class="hidden sm:inline-block text-xs bg-emerald-100 text-emerald-800 font-semibold px-2.5 py-1 rounded-full">
           🇬🇧 High-Volume Tech Board
@@ -271,9 +269,31 @@
   </main>
 
   <!-- Footer -->
-  <footer class="text-center py-6 text-xs text-slate-400 border-t border-slate-200 bg-white">
-    © 2026 UK IT Jobs Daily. Direct application links.
+  <footer class="border-t border-slate-200 bg-white">
+    <div class="mx-auto grid max-w-6xl grid-cols-1 gap-8 px-4 py-8 sm:grid-cols-2 md:grid-cols-4">
+      <div class="sm:col-span-2">
+        <a href="/UK-IT-JOBS/" class="text-lg font-extrabold tracking-tight text-slate-900">UK<span class="text-emerald-600">IT</span> Jobs</a>
+        <p class="mt-2 max-w-md text-sm leading-6 text-slate-500">Discover technology opportunities across the UK. Always check the employer's official listing for the latest details.</p>
+      </div>
+      <div>
+        <h2 class="text-sm font-bold text-slate-800">Information</h2>
+        <ul class="mt-3 space-y-2 text-sm text-slate-500">
+          <li><a class="hover:text-emerald-700" href="./privacy-policy.html">Privacy Policy</a></li>
+          <li><a class="hover:text-emerald-700" href="./terms-and-conditions.html">Terms &amp; Conditions</a></li>
+          <li><a class="hover:text-emerald-700" href="./cookies-policy.html">Cookies Policy</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="text-sm font-bold text-slate-800">Get in touch</h2>
+        <ul class="mt-3 space-y-2 text-sm text-slate-500">
+          <li><a class="hover:text-emerald-700" href="./contact.html">Contact Us</a></li>
+          <li><a class="hover:text-emerald-700" href="mailto:YOUR_EMAIL@example.com">Email us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t border-slate-100 px-4 py-4 text-center text-xs text-slate-400">© <span class="current-year">2026</span> UK IT Jobs. All rights reserved.</div>
   </footer>
+  <script>document.querySelectorAll('.current-year').forEach(el => el.textContent = new Date().getFullYear());</script>
 
   </div>
 
