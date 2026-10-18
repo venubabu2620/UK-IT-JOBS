@@ -771,7 +771,178 @@ const whatsappUrl =
 
       });
     }
+// ===== Authentication =====
 
+let isSignupMode = false;
+
+function openAuthModal() {
+document.getElementById(‘authModal’).classList.remove(‘hidden’);
+document.getElementById(‘authMessage’).textContent = ‘’;
+}
+
+function closeAuthModal() {
+document.getElementById(‘authModal’).classList.add(‘hidden’);
+}
+
+function toggleAuthMode() {
+isSignupMode = !isSignupMode;
+
+document.getElementById(‘authSubmitButton’).textContent =
+isSignupMode ? ‘Create account’ : ‘Login’;
+
+document.getElementById(‘authModeButton’).textContent =
+isSignupMode ? ‘Already have an account? Login’ : ‘Create account’;
+
+document.getElementById(‘authPassword’).autocomplete =
+isSignupMode ? ‘new-password’ : ‘current-password’;
+
+document.getElementById(‘authMessage’).textContent = ‘’;
+}
+
+function showAuthMessage(message, isError = false) {
+const element = document.getElementById(‘authMessage’);
+element.textContent = message;
+element.className = mt-4 text-center text-sm ${ isError ? 'text-red-600' : 'text-emerald-700' };
+}
+
+async function handleEmailAuth(event) {
+event.preventDefault();
+
+const email = document.getElementById(‘authEmail’).value.trim();
+const password = document.getElementById(‘authPassword’).value;
+const button = document.getElementById(‘authSubmitButton’);
+
+button.disabled = true;
+button.textContent = ‘Please wait…’;
+
+try {
+if (isSignupMode) {
+const { data, error } = await supabaseClient.auth.signUp({
+email,
+password,
+options: {
+emailRedirectTo: window.location.origin + window.location.pathname
+}
+});
+
+  if (error) throw error;
+  if (data.session) {
+    showAuthMessage('Account created successfully!');
+    updateAuthUI(data.session.user);
+  } else {
+    showAuthMessage('Account created. Check your email to confirm your account.');
+  }
+} else {
+  const { data, error } = await supabaseClient.auth.signInWithPassword({
+    email,
+    password
+  });
+  if (error) throw error;
+  showAuthMessage('Login successful!');
+  updateAuthUI(data.user);
+  setTimeout(closeAuthModal, 800);
+}
+
+} catch (error) {
+showAuthMessage(error.message || ‘Authentication failed.’, true);
+} finally {
+button.disabled = false;
+button.textContent = isSignupMode ? ‘Create account’ : ‘Login’;
+}
+}
+
+async function signInWithGoogle() {
+showAuthMessage(‘Connecting to Google…’);
+
+const { error } = await supabaseClient.auth.signInWithOAuth({
+provider: ‘google’,
+options: {
+redirectTo: window.location.origin + window.location.pathname
+}
+});
+
+if (error) {
+showAuthMessage(error.message || ‘Google login failed.’, true);
+}
+}
+
+async function resetPassword() {
+const email = document.getElementById(‘authEmail’).value.trim();
+
+if (!email) {
+showAuthMessage(‘Enter your email address first.’, true);
+document.getElementById(‘authEmail’).focus();
+return;
+}
+
+const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+redirectTo: window.location.origin + window.location.pathname
+});
+
+if (error) {
+showAuthMessage(error.message || ‘Could not send password reset email.’, true);
+} else {
+showAuthMessage(‘If an account exists for this email, a password reset link will be sent.’);
+}
+}
+
+function updateAuthUI(user) {
+const button = document.getElementById(‘authButton’);
+const text = document.getElementById(‘authButtonText’);
+
+if (user) {
+text.textContent = user.email ? user.email.split(’@’)[0] : ‘Account’;
+button.onclick = signOutUser;
+button.title = ‘Click to sign out’;
+} else {
+text.textContent = ‘Login’;
+button.onclick = openAuthModal;
+button.title = ‘Login or create an account’;
+}
+}
+
+async function signOutUser() {
+const { error } = await supabaseClient.auth.signOut();
+
+if (error) {
+alert(’Could not sign out: ’ + error.message);
+return;
+}
+
+updateAuthUI(null);
+alert(‘You have signed out.’);
+}
+
+async function initialiseAuth() {
+const { data, error } = await supabaseClient.auth.getSession();
+
+if (error) {
+console.error(‘Could not retrieve session:’, error);
+}
+
+updateAuthUI(data?.session?.user || null);
+
+supabaseClient.auth.onAuthStateChange((event, session) => {
+updateAuthUI(session?.user || null);
+
+if (event === 'SIGNED_IN') {
+  closeAuthModal();
+}
+
+});
+}
+
+// Close popup when clicking outside the form.
+document.getElementById(‘authModal’).addEventListener(‘click’, function (event) {
+if (event.target === this) closeAuthModal();
+});
+
+// Close popup with Escape key.
+document.addEventListener(‘keydown’, function (event) {
+if (event.key === ‘Escape’) closeAuthModal();
+});
+
+initialiseAuth();
     updateSavedCount();
     fetchJobs();
   </script>
