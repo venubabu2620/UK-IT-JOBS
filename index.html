@@ -156,6 +156,13 @@
     .job-card-heading { gap: .6rem !important; }
     .job-card-apply { padding-top: .7rem !important; padding-bottom: .7rem !important; }
   }
+
+  /* Company logos inside compact job cards */
+  .job-card-logo img { display: block; max-width: 100%; max-height: 100%; }
+  .job-card-logo { min-width: 3rem; min-height: 3rem; }
+  @media (max-width: 640px) {
+    .job-card-logo { width: 2.5rem; height: 2.5rem; min-width: 2.5rem; min-height: 2.5rem; }
+  }
 </style>
   <!-- Counter.dev Analytics -->
   <script
@@ -698,6 +705,40 @@ const whatsappUrl =
       filterAndRender();
     }
 
+    // Company logo lookup. Unknown companies safely fall back to their initial.
+    function getCompanyLogoUrl(companyName) {
+      const name = String(companyName || '').trim().toLowerCase();
+      const domains = [
+        [/^microsoft|microsoft corporation/, 'microsoft.com'],
+        [/^google|google uk/, 'google.com'],
+        [/^amazon|amazon web services|aws$/, 'amazon.com'],
+        [/^ibm|international business machines/, 'ibm.com'],
+        [/^deloitte/, 'deloitte.com'],
+        [/^capgemini/, 'capgemini.com'],
+        [/^accenture/, 'accenture.com'],
+        [/^citi|citibank|citigroup/, 'citi.com'],
+        [/^meta$/, 'meta.com'],
+        [/^apple/, 'apple.com'],
+        [/^netflix/, 'netflix.com'],
+        [/^salesforce/, 'salesforce.com'],
+        [/^oracle/, 'oracle.com'],
+        [/^bt( group| plc)?$/, 'bt.com'],
+        [/^barclays/, 'barclays.co.uk'],
+        [/^hsbc/, 'hsbc.com'],
+        [/^jpmorgan|^jp morgan|^j\.p\. morgan/, 'jpmorganchase.com'],
+        [/^tesco/, 'tesco.com'],
+        [/^sky( uk| limited)?$/, 'sky.com'],
+        [/^vodafone/, 'vodafone.com'],
+        [/^bbc/, 'bbc.co.uk'],
+        [/^motorola/, 'motorola.com'],
+        [/^enorth staffing/, 'enorthstaffing.com'],
+        [/^abc technologies$/, 'abctechnologies.com']
+      ];
+      const match = domains.find(([pattern]) => pattern.test(name));
+      if (!match) return '';
+      return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(match[1])}&sz=128`;
+    }
+
     function renderJobs(jobs) {
       const container = document.getElementById('jobList');
       const countEl = document.getElementById('resultsCount');
@@ -738,7 +779,10 @@ const whatsappUrl =
             <div class="h-1.5 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500"></div>
             <div class="job-card-content flex flex-1 flex-col p-5">
               <div class="job-card-heading mb-4 flex items-start gap-3">
-                <div class="job-card-logo flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-slate-100 bg-slate-50 text-lg font-extrabold text-emerald-700">${escapeHtml(company.slice(0, 1).toUpperCase())}</div>
+                <div class="job-card-logo flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-slate-100 bg-white p-1.5 text-lg font-extrabold text-emerald-700 shadow-sm">
+                  ${getCompanyLogoUrl(company) ? `<img src="${getCompanyLogoUrl(company)}" alt="${escapeHtml(company)} logo" loading="lazy" class="h-full w-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">` : ''}
+                  <span aria-hidden="true" class="h-full w-full items-center justify-center rounded-lg bg-slate-50 ${getCompanyLogoUrl(company) ? 'hidden' : 'flex'}">${escapeHtml(company.slice(0, 1).toUpperCase())}</span>
+                </div>
                 <div class="min-w-0 flex-1">
                   <h3 class="break-words whitespace-normal text-base font-bold leading-6 text-slate-900">${escapeHtml(title)}</h3>
                   <p class="mt-1 text-sm font-semibold text-emerald-700">${escapeHtml(company)}</p>
