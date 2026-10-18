@@ -522,9 +522,10 @@ const whatsappUrl =
 
             <div class="flex items-start justify-between gap-2 mb-2">
 
-            <h3 class="font-semibold text-slate-900 pr-1 break-words whitespace-normal leading-snug">
-            ${escapeHtml(job.title || 'Untitled role')}
-            </h3>
+           <h3 class="font-semibold text-slate-900 text-sm leading-5 pr-1"
+    style="overflow-wrap: normal; word-break: normal; white-space: normal;">
+  ${escapeHtml(job.title || 'Untitled role')}
+</h3>
 
               <div class="flex items-center gap-1.5 shrink-0">
                 <button
