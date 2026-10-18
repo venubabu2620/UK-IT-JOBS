@@ -702,7 +702,7 @@ const whatsappUrl =
           ? `£${Number(job.salary_min).toLocaleString()} – £${Number(job.salary_max).toLocaleString()}`
           : job.salary_max ? `Up to £${Number(job.salary_max).toLocaleString()}`
           : job.salary_min ? `From £${Number(job.salary_min).toLocaleString()}`
-          : 'Salary not disclosed';
+          : '';
         const searchableDetails = `${title} ${location} ${description} ${job.job_type || ''} ${job.work_type || ''}`.toLowerCase();
         const workArrangement = /remote|work from home|work-from-home|fully distributed/.test(searchableDetails) ? 'Remote'
           : /hybrid/.test(searchableDetails) ? 'Hybrid'
@@ -741,10 +741,10 @@ const whatsappUrl =
                 ${job.job_type ? `<span class="inline-flex items-center gap-1 rounded-full bg-indigo-50 px-2.5 py-1.5 text-indigo-700">💼 ${escapeHtml(job.job_type)}</span>` : ''}
               </div>
 
-              <div class="mb-4 rounded-xl border border-emerald-100 bg-emerald-50/70 px-3.5 py-3">
+              ${salary ? `<div class="mb-4 rounded-xl border border-emerald-100 bg-emerald-50/70 px-3.5 py-3">
                 <p class="mb-0.5 text-[11px] font-semibold uppercase tracking-wide text-emerald-700">Salary</p>
                 <p class="text-sm font-bold text-slate-800">💷 ${escapeHtml(salary)}</p>
-              </div>
+              </div>` : ''}
 
               ${tags.length ? `<div class="mb-4 flex flex-wrap gap-1.5">${tags.map(tag => `<span class="rounded-full border border-blue-100 bg-blue-50 px-2.5 py-1 text-[11px] font-medium text-blue-700">${escapeHtml(tag)}</span>`).join('')}</div>` : ''}
 
