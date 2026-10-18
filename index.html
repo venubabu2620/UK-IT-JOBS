@@ -103,11 +103,11 @@
 
   /* Improve the layout on mobile phones */
   @media (max-width: 640px) {
-    header > div {
+    .desktop-header > div {
       gap: 10px;
     }
 
-    header > div > div {
+    .desktop-header > div > div {
       max-width: 100%;
       flex-wrap: wrap;
     }
@@ -131,6 +131,15 @@
       min-width: 0;
       max-width: 100%;
     }
+  }
+
+  /* Compact mobile header; desktop header remains unchanged */
+  .mobile-header { display: none; }
+  @media (max-width: 640px) {
+    .desktop-header { display: none !important; }
+    .mobile-header { display: block; }
+    .mobile-header button, .mobile-header a { -webkit-tap-highlight-color: transparent; }
+    #mobileMenuPanel[hidden] { display: none !important; }
   }
 </style>
   <!-- Counter.dev Analytics -->
@@ -160,8 +169,36 @@
   <div id="appContent" class="hidden">
 
 
+  <!-- Compact mobile header -->
+  <div class="mobile-header sticky top-0 z-30 border-b border-slate-200 bg-white shadow-sm">
+    <div class="mx-auto flex max-w-6xl items-center justify-between gap-2 px-3 py-3">
+      <div class="min-w-0 text-lg font-extrabold tracking-tight text-slate-800" aria-label="UK IT Jobs home">
+        UK<span class="text-emerald-600">IT</span> Jobs
+      </div>
+      <div class="flex shrink-0 items-center gap-2">
+        <button type="button" onclick="showSavedJobs()" class="relative inline-flex h-10 items-center justify-center gap-1 rounded-xl border border-amber-200 bg-amber-50 px-3 text-amber-700" aria-label="View saved jobs" title="View saved jobs">
+          <span class="text-lg" aria-hidden="true">♥</span>
+          <span id="mobileSavedCount" class="min-w-4 rounded-full bg-amber-200 px-1 text-center text-xs font-bold">0</span>
+        </button>
+        <button type="button" id="mobileAuthButton" onclick="signOutUser()" class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-emerald-200 bg-emerald-50 text-lg" aria-label="Account" title="Account">👤</button>
+        <button type="button" id="mobileMenuButton" onclick="toggleMobileMenu()" class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-xl text-slate-700" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenuPanel">☰</button>
+      </div>
+    </div>
+    <nav id="mobileMenuPanel" hidden class="border-t border-slate-100 bg-white px-3 pb-3 pt-2" aria-label="Mobile menu">
+      <div class="grid grid-cols-2 gap-2">
+        <a href="./privacy-policy.html" class="rounded-lg border border-slate-200 px-3 py-2.5 text-sm text-slate-700">Privacy Policy</a>
+        <a href="./terms-and-conditions.html" class="rounded-lg border border-slate-200 px-3 py-2.5 text-sm text-slate-700">Terms &amp; Conditions</a>
+        <a href="./cookies-policy.html" class="rounded-lg border border-slate-200 px-3 py-2.5 text-sm text-slate-700">Cookies Policy</a>
+        <a href="./contact.html" class="rounded-lg border border-slate-200 px-3 py-2.5 text-sm text-slate-700">✉ Contact</a>
+        <a href="https://api.whatsapp.com/send?text=Check%20out%20this%20free%20UK%20IT%20Job%20Board%20with%20live%20tech%20roles%3A%20https%3A%2F%2Fvenubabu2620.github.io%2FUK-IT-JOBS%2F" target="_blank" rel="noopener noreferrer" class="rounded-lg border border-slate-200 px-3 py-2.5 text-sm text-slate-700">Share on WhatsApp</a>
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fvenubabu2620.github.io%2FUK-IT-JOBS%2F" target="_blank" rel="noopener noreferrer" class="rounded-lg border border-slate-200 px-3 py-2.5 text-sm text-slate-700">Share on LinkedIn</a>
+        <button type="button" onclick="copySiteLink()" class="col-span-2 rounded-lg bg-slate-800 px-3 py-2.5 text-left text-sm font-semibold text-white">🔗 <span id="mobileCopyBtnText">Copy Link</span></button>
+      </div>
+    </nav>
+  </div>
+
   <!-- Sticky Header -->
-  <header class="bg-white border-b border-slate-200 sticky top-0 z-20 shadow-sm">
+  <header class="desktop-header bg-white border-b border-slate-200 sticky top-0 z-20 shadow-sm">
   <div class="max-w-6xl mx-auto px-4 py-3.5 flex flex-wrap items-center justify-between gap-3">
 
       <div class="flex items-center gap-3">
@@ -477,7 +514,22 @@
     }
 
     function updateSavedCount() {
-      document.getElementById('savedCount').innerText = getSavedJobs().length;
+      const count = getSavedJobs().length;
+      const desktopCount = document.getElementById('savedCount');
+      const mobileCount = document.getElementById('mobileSavedCount');
+      if (desktopCount) desktopCount.innerText = count;
+      if (mobileCount) mobileCount.innerText = count;
+    }
+
+    function toggleMobileMenu() {
+      const panel = document.getElementById('mobileMenuPanel');
+      const button = document.getElementById('mobileMenuButton');
+      if (!panel || !button) return;
+      const willOpen = panel.hidden;
+      panel.hidden = !willOpen;
+      button.setAttribute('aria-expanded', String(willOpen));
+      button.setAttribute('aria-label', willOpen ? 'Close menu' : 'Open menu');
+      button.textContent = willOpen ? '×' : '☰';
     }
 
     function showSavedJobs() {
@@ -818,13 +870,15 @@ const whatsappUrl =
 
       navigator.clipboard.writeText(siteUrl).then(() => {
 
-        const btnText =
-          document.getElementById('copyBtnText');
+        const btnTexts = [
+          document.getElementById('copyBtnText'),
+          document.getElementById('mobileCopyBtnText')
+        ].filter(Boolean);
 
-        btnText.innerText = "Copied! ✓";
+        btnTexts.forEach((btnText) => { btnText.innerText = "Copied! ✓"; });
 
         setTimeout(() => {
-          btnText.innerText = "Copy Link";
+          btnTexts.forEach((btnText) => { btnText.innerText = "Copy Link"; });
         }, 2000);
 
       });
@@ -864,6 +918,7 @@ const whatsappUrl =
       const appContent = document.getElementById('appContent');
       const button = document.getElementById('authButton');
       const text = document.getElementById('authButtonText');
+      const mobileButton = document.getElementById('mobileAuthButton');
 
       if (user) {
         loginPage.classList.add('hidden');
@@ -872,6 +927,11 @@ const whatsappUrl =
         if (button) {
           button.onclick = signOutUser;
           button.title = 'Click to sign out';
+        }
+        if (mobileButton) {
+          mobileButton.onclick = signOutUser;
+          mobileButton.title = 'Signed in — tap to sign out';
+          mobileButton.setAttribute('aria-label', 'Signed in; tap to sign out');
         }
         updateSavedCount();
         fetchJobs();
@@ -882,6 +942,11 @@ const whatsappUrl =
         if (button) {
           button.onclick = signInWithGoogle;
           button.title = 'Sign in with Google';
+        }
+        if (mobileButton) {
+          mobileButton.onclick = signInWithGoogle;
+          mobileButton.title = 'Sign in with Google';
+          mobileButton.setAttribute('aria-label', 'Sign in with Google');
         }
         allJobs = [];
       }
