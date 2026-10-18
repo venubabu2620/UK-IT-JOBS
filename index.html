@@ -73,7 +73,15 @@
           <span class="hidden sm:inline">Saved</span>
           <span id="savedCount" class="bg-amber-200 text-amber-800 px-1.5 py-0.5 rounded-full text-[10px]">0</span>
         </button>
-
+      <!-- Login / Account Button -->
+        <button
+        id="authButton"
+        onclick="openAuthModal()"
+        class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg shadow-sm transition"
+        >
+        <span>🔑</span>
+        <span id="authButtonText">Login</span>
+        </button>
         <!-- 1-Click Share Buttons -->
         <div class="flex items-center gap-2">
 
@@ -119,7 +127,88 @@
       </div>
     </div>
   </header>
-
+<!-- Authentication Popup -->
+<div id="authModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4">
+  <div class="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
+<!-- Close Button -->
+<button
+  type="button"
+  onclick="closeAuthModal()"
+  class="absolute right-4 top-3 text-2xl text-slate-400 hover:text-slate-700"
+  aria-label="Close login popup"
+>&times;</button>
+<div class="mb-6 text-center">
+  <h2 class="text-2xl font-bold text-slate-900">Welcome to UK IT Jobs</h2>
+  <p class="mt-2 text-sm text-slate-500">Sign in to your account or create one.</p>
+</div>
+<!-- Google Login -->
+<button
+  type="button"
+  onclick="signInWithGoogle()"
+  class="flex w-full items-center justify-center gap-3 rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+>
+  <span class="text-lg font-bold">G</span>
+  Continue with Google
+</button>
+<div class="my-5 flex items-center gap-3">
+  <div class="h-px flex-1 bg-slate-200"></div>
+  <span class="text-xs text-slate-400">OR CONTINUE WITH EMAIL</span>
+  <div class="h-px flex-1 bg-slate-200"></div>
+</div>
+<!-- Login / Signup Form -->
+<form id="authForm" onsubmit="handleEmailAuth(event)">
+  <label for="authEmail" class="mb-1 block text-sm font-medium text-slate-700">
+    Email address
+  </label>
+  <input
+    id="authEmail"
+    type="email"
+    autocomplete="email"
+    required
+    placeholder="you@example.com"
+    class="mb-4 w-full rounded-lg border border-slate-300 px-3 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+  >
+  <label for="authPassword" class="mb-1 block text-sm font-medium text-slate-700">
+    Password
+  </label>
+  <input
+    id="authPassword"
+    type="password"
+    autocomplete="current-password"
+    minlength="6"
+    required
+    placeholder="At least 6 characters"
+    class="w-full rounded-lg border border-slate-300 px-3 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+  >
+  <button
+    id="authSubmitButton"
+    type="submit"
+    class="mt-5 w-full rounded-lg bg-emerald-600 px-4 py-3 text-sm font-semibold text-white hover:bg-emerald-700"
+  >
+    Login
+  </button>
+</form>
+<div class="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm">
+  <button
+    type="button"
+    onclick="resetPassword()"
+    class="text-emerald-700 hover:underline"
+  >
+    Forgot password?
+  </button>
+  <button
+    id="authModeButton"
+    type="button"
+    onclick="toggleAuthMode()"
+    class="font-semibold text-emerald-700 hover:underline"
+  >
+    Create account
+  </button>
+</div>
+<p id="authMessage" role="status" aria-live="polite" class="mt-4 text-center text-sm"></p>
+  </div>
+</div>
+  
   <!-- Main Content -->
   <main class="max-w-6xl mx-auto px-4 py-8 flex-grow w-full">
 
