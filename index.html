@@ -35,7 +35,37 @@
   <!-- Tailwind & Supabase Scripts -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  /* London skyline login background */
+  #loginPage {
+    background-color: #eaf8fc;
+    background-image:
+      linear-gradient(
+        to bottom,
+        rgba(235, 249, 255, 0.20),
+        rgba(255, 255, 255, 0.15)
+      ),
+      url("https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=2400&q=85");
 
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+  /* Keep the login card readable */
+  #loginPage .login-card {
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 0 24px 70px rgba(15, 54, 77, 0.20);
+  }
+
+  /* Improve the background position on mobile */
+  @media (max-width: 640px) {
+    #loginPage {
+      background-position: 57% center;
+    }
+  }
+</style>
   <!-- Counter.dev Analytics -->
   <script
     src="https://cdn.counter.dev/script.js"
@@ -47,8 +77,8 @@
 <body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col antialiased">
 
   <!-- Google-only login screen -->
-  <section id="loginPage" class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900 px-4 py-8">
-    <div class="w-full max-w-md rounded-2xl bg-white p-7 shadow-2xl text-center">
+  <section id="loginPage" class="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto px-4 py-8">
+    <div class="login-card w-full max-w-md rounded-2xl p-7 text-center">
       <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-2xl">🇬🇧</div>
       <h1 class="text-2xl font-extrabold text-slate-900">UK <span class="text-emerald-600">IT</span> Jobs</h1>
       <p class="mt-2 mb-6 text-sm text-slate-500">Sign in with Google to explore the latest UK technology jobs.</p>
