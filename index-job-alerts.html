@@ -662,11 +662,39 @@ const whatsappUrl =
     }
 
     function getCompanyLogoUrl(job) {
-      // Only use a logo URL explicitly supplied by the job data.
-      // Do not use generic favicon services: they can return a globe icon
-      // even when the employer has no logo. The card will show an initial instead.
+      // Prefer a logo URL supplied by the job feed.
       const direct = job.company_logo || job.logo_url || job.company_logo_url || job.logo;
-      return direct && /^https?:\/\//i.test(String(direct)) ? String(direct) : '';
+      if (direct && /^https?:\/\//i.test(String(direct))) return String(direct);
+
+      // If the feed has no logo, try a company-logo endpoint using a known
+      // employer domain or a conservative domain guess. If it fails, the card
+      // swaps to the company initial via the image onerror handler.
+      const company = String(job.company || '').trim();
+      const knownDomains = {
+        'motorola solutions': 'motorolasolutions.com',
+        'barclays': 'barclays.co.uk',
+        'harvey nash': 'harveynash.com',
+        'harnham': 'harnham.com',
+        'enorth staffing limited': 'enorth.com',
+        'jefferies llc': 'jefferies.com',
+        'searchability': 'searchability.com',
+        'arc it recruitment': 'arcitrecruitment.com',
+        'organox': 'organox.com',
+        'universal music holdings': 'universalmusic.com',
+        'adaptable recruitment': 'adaptablerecruitment.com'
+      };
+      const normalized = company.toLowerCase().replace(/[.,]/g, '').replace(/\s+/g, ' ').trim();
+      let domain = knownDomains[normalized];
+      if (!domain) {
+        // Guess only a simple company-name domain; errors fall back to initials.
+        const base = normalized
+          .replace(/\b(limited|ltd|llc|plc|inc|group|holdings|recruitment)\b/g, '')
+          .trim()
+          .split(/\s+/)[0]
+          .replace(/[^a-z0-9-]/g, '');
+        if (base.length >= 3) domain = base + '.com';
+      }
+      return domain ? `https://logo.clearbit.com/${domain}?size=128` : '';
     }
 
     function renderJobs(jobs) {
