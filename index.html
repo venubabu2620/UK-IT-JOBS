@@ -103,11 +103,11 @@
 
   /* Improve the layout on mobile phones */
   @media (max-width: 640px) {
-    .desktop-header > div {
+    header > div {
       gap: 10px;
     }
 
-    .desktop-header > div > div {
+    header > div > div {
       max-width: 100%;
       flex-wrap: wrap;
     }
@@ -131,37 +131,6 @@
       min-width: 0;
       max-width: 100%;
     }
-  }
-
-  /* Compact mobile header; desktop header remains unchanged */
-  .mobile-header { display: none; }
-  @media (max-width: 640px) {
-    .desktop-header { display: none !important; }
-    .mobile-header { display: block; }
-    .mobile-header button, .mobile-header a { -webkit-tap-highlight-color: transparent; }
-    #mobileMenuPanel[hidden] { display: none !important; }
-  }
-
-  /* Improvement 1: compact job cards */
-  .job-card-content { padding: 1rem !important; }
-  .job-card-heading { margin-bottom: .65rem !important; }
-  .job-card-logo { width: 2.5rem !important; height: 2.5rem !important; border-radius: .65rem !important; font-size: 1rem !important; }
-  .job-card-meta { margin-bottom: .6rem !important; gap: .35rem !important; }
-  .job-card-tags { margin-bottom: .7rem !important; gap: .35rem !important; }
-  .job-card-actions { padding-top: .7rem !important; }
-  .job-card-apply { padding-top: .65rem !important; padding-bottom: .65rem !important; }
-  .job-card-footer { margin-top: .25rem !important; }
-  @media (max-width: 640px) {
-    .job-card-content { padding: .85rem !important; }
-    .job-card-heading { gap: .6rem !important; }
-    .job-card-apply { padding-top: .7rem !important; padding-bottom: .7rem !important; }
-  }
-
-  /* Company logos inside compact job cards */
-  .job-card-logo img { display: block; max-width: 100%; max-height: 100%; }
-  .job-card-logo { min-width: 3rem; min-height: 3rem; }
-  @media (max-width: 640px) {
-    .job-card-logo { width: 2.5rem; height: 2.5rem; min-width: 2.5rem; min-height: 2.5rem; }
   }
 </style>
   <!-- Counter.dev Analytics -->
@@ -191,36 +160,8 @@
   <div id="appContent" class="hidden">
 
 
-  <!-- Compact mobile header -->
-  <div class="mobile-header sticky top-0 z-30 border-b border-slate-200 bg-white shadow-sm">
-    <div class="mx-auto flex max-w-6xl items-center justify-between gap-2 px-3 py-3">
-      <div class="min-w-0 text-lg font-extrabold tracking-tight text-slate-800" aria-label="UK IT Jobs home">
-        UK<span class="text-emerald-600">IT</span> Jobs
-      </div>
-      <div class="flex shrink-0 items-center gap-2">
-        <button type="button" onclick="showSavedJobs()" class="relative inline-flex h-10 items-center justify-center gap-1 rounded-xl border border-amber-200 bg-amber-50 px-3 text-amber-700" aria-label="View saved jobs" title="View saved jobs">
-          <span class="text-lg" aria-hidden="true">♥</span>
-          <span id="mobileSavedCount" class="min-w-4 rounded-full bg-amber-200 px-1 text-center text-xs font-bold">0</span>
-        </button>
-        <button type="button" id="mobileAuthButton" onclick="signOutUser()" class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-emerald-200 bg-emerald-50 text-lg" aria-label="Account" title="Account">👤</button>
-        <button type="button" id="mobileMenuButton" onclick="toggleMobileMenu()" class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-xl text-slate-700" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenuPanel">☰</button>
-      </div>
-    </div>
-    <nav id="mobileMenuPanel" hidden class="border-t border-slate-100 bg-white px-3 pb-3 pt-2" aria-label="Mobile menu">
-      <div class="grid grid-cols-2 gap-2">
-        <a href="./privacy-policy.html" class="rounded-lg border border-slate-200 px-3 py-2.5 text-sm text-slate-700">Privacy Policy</a>
-        <a href="./terms-and-conditions.html" class="rounded-lg border border-slate-200 px-3 py-2.5 text-sm text-slate-700">Terms &amp; Conditions</a>
-        <a href="./cookies-policy.html" class="rounded-lg border border-slate-200 px-3 py-2.5 text-sm text-slate-700">Cookies Policy</a>
-        <a href="./contact.html" class="rounded-lg border border-slate-200 px-3 py-2.5 text-sm text-slate-700">✉ Contact</a>
-        <a href="https://api.whatsapp.com/send?text=Check%20out%20this%20free%20UK%20IT%20Job%20Board%20with%20live%20tech%20roles%3A%20https%3A%2F%2Fvenubabu2620.github.io%2FUK-IT-JOBS%2F" target="_blank" rel="noopener noreferrer" class="rounded-lg border border-slate-200 px-3 py-2.5 text-sm text-slate-700">Share on WhatsApp</a>
-        <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fvenubabu2620.github.io%2FUK-IT-JOBS%2F" target="_blank" rel="noopener noreferrer" class="rounded-lg border border-slate-200 px-3 py-2.5 text-sm text-slate-700">Share on LinkedIn</a>
-        <button type="button" onclick="copySiteLink()" class="col-span-2 rounded-lg bg-slate-800 px-3 py-2.5 text-left text-sm font-semibold text-white">🔗 <span id="mobileCopyBtnText">Copy Link</span></button>
-      </div>
-    </nav>
-  </div>
-
   <!-- Sticky Header -->
-  <header class="desktop-header bg-white border-b border-slate-200 sticky top-0 z-20 shadow-sm">
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-20 shadow-sm">
   <div class="max-w-6xl mx-auto px-4 py-3.5 flex flex-wrap items-center justify-between gap-3">
 
       <div class="flex items-center gap-3">
@@ -235,6 +176,7 @@
 
       <!-- Header quick links: Legal dropdown and Contact -->
       <div class="flex items-center gap-2">
+        <a href="./cv-templates.html" class="inline-flex items-center gap-1 rounded-lg bg-violet-50 border border-violet-200 px-3 py-2 text-xs font-bold text-violet-700 hover:bg-violet-100">👑 CV Templates</a>
         <details class="relative group">
           <summary class="list-none cursor-pointer inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 hover:border-emerald-500 hover:text-emerald-700">
             Legal <span aria-hidden="true">▾</span>
@@ -424,6 +366,19 @@
       <div id="savedJobsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
     </section>
 
+    <!-- Premium CV Templates promotion -->
+    <section class="mb-7 overflow-hidden rounded-2xl border border-violet-200 bg-gradient-to-r from-violet-50 via-white to-emerald-50 p-5 sm:p-7 shadow-sm">
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p class="text-xs font-bold uppercase tracking-wider text-violet-700">Premium service</p>
+          <h2 class="mt-1 text-xl sm:text-2xl font-extrabold text-slate-900">UK Job CV Templates</h2>
+          <p class="mt-2 max-w-xl text-sm text-slate-600">Professional, ATS-friendly CV templates tailored to UK job applications. Preview designs, choose your role, and get an editable Word template.</p>
+          <div class="mt-3 flex flex-wrap gap-2 text-xs font-medium text-slate-600"><span>✓ UK CV format</span><span>✓ ATS-conscious layouts</span><span>✓ Role-specific</span><span>✓ £4.99 one-time</span></div>
+        </div>
+        <a href="./cv-templates.html" class="inline-flex shrink-0 items-center justify-center rounded-xl bg-emerald-600 px-5 py-3 text-sm font-bold text-white shadow-sm hover:bg-emerald-700">Browse CV Templates →</a>
+      </div>
+    </section>
+
     <!-- Job Cards -->
     <div id="jobList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
 
@@ -536,22 +491,7 @@
     }
 
     function updateSavedCount() {
-      const count = getSavedJobs().length;
-      const desktopCount = document.getElementById('savedCount');
-      const mobileCount = document.getElementById('mobileSavedCount');
-      if (desktopCount) desktopCount.innerText = count;
-      if (mobileCount) mobileCount.innerText = count;
-    }
-
-    function toggleMobileMenu() {
-      const panel = document.getElementById('mobileMenuPanel');
-      const button = document.getElementById('mobileMenuButton');
-      if (!panel || !button) return;
-      const willOpen = panel.hidden;
-      panel.hidden = !willOpen;
-      button.setAttribute('aria-expanded', String(willOpen));
-      button.setAttribute('aria-label', willOpen ? 'Close menu' : 'Open menu');
-      button.textContent = willOpen ? '×' : '☰';
+      document.getElementById('savedCount').innerText = getSavedJobs().length;
     }
 
     function showSavedJobs() {
@@ -705,40 +645,6 @@ const whatsappUrl =
       filterAndRender();
     }
 
-    // Company logo lookup. Unknown companies safely fall back to their initial.
-    function getCompanyLogoUrl(companyName) {
-      const name = String(companyName || '').trim().toLowerCase();
-      const domains = [
-        [/^microsoft|microsoft corporation/, 'microsoft.com'],
-        [/^google|google uk/, 'google.com'],
-        [/^amazon|amazon web services|aws$/, 'amazon.com'],
-        [/^ibm|international business machines/, 'ibm.com'],
-        [/^deloitte/, 'deloitte.com'],
-        [/^capgemini/, 'capgemini.com'],
-        [/^accenture/, 'accenture.com'],
-        [/^citi|citibank|citigroup/, 'citi.com'],
-        [/^meta$/, 'meta.com'],
-        [/^apple/, 'apple.com'],
-        [/^netflix/, 'netflix.com'],
-        [/^salesforce/, 'salesforce.com'],
-        [/^oracle/, 'oracle.com'],
-        [/^bt( group| plc)?$/, 'bt.com'],
-        [/^barclays/, 'barclays.co.uk'],
-        [/^hsbc/, 'hsbc.com'],
-        [/^jpmorgan|^jp morgan|^j\.p\. morgan/, 'jpmorganchase.com'],
-        [/^tesco/, 'tesco.com'],
-        [/^sky( uk| limited)?$/, 'sky.com'],
-        [/^vodafone/, 'vodafone.com'],
-        [/^bbc/, 'bbc.co.uk'],
-        [/^motorola/, 'motorola.com'],
-        [/^enorth staffing/, 'enorthstaffing.com'],
-        [/^abc technologies$/, 'abctechnologies.com']
-      ];
-      const match = domains.find(([pattern]) => pattern.test(name));
-      if (!match) return '';
-      return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(match[1])}&sz=128`;
-    }
-
     function renderJobs(jobs) {
       const container = document.getElementById('jobList');
       const countEl = document.getElementById('resultsCount');
@@ -754,6 +660,11 @@ const whatsappUrl =
         const company = job.company || 'Unknown company';
         const location = job.location || 'United Kingdom';
         const description = job.job_description || 'No description available.';
+        const salary = job.salary_min && job.salary_max
+          ? `£${Number(job.salary_min).toLocaleString()} – £${Number(job.salary_max).toLocaleString()}`
+          : job.salary_max ? `Up to £${Number(job.salary_max).toLocaleString()}`
+          : job.salary_min ? `From £${Number(job.salary_min).toLocaleString()}`
+          : 'Salary not disclosed';
         const searchableDetails = `${title} ${location} ${description} ${job.job_type || ''} ${job.work_type || ''}`.toLowerCase();
         const workArrangement = /remote|work from home|work-from-home|fully distributed/.test(searchableDetails) ? 'Remote'
           : /hybrid/.test(searchableDetails) ? 'Hybrid'
@@ -777,29 +688,31 @@ const whatsappUrl =
         return `
           <article class="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-emerald-200 hover:shadow-lg">
             <div class="h-1.5 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500"></div>
-            <div class="job-card-content flex flex-1 flex-col p-5">
-              <div class="job-card-heading mb-4 flex items-start gap-3">
-                <div class="job-card-logo flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-slate-100 bg-white p-1.5 text-lg font-extrabold text-emerald-700 shadow-sm">
-                  ${getCompanyLogoUrl(company) ? `<img src="${getCompanyLogoUrl(company)}" alt="${escapeHtml(company)} logo" loading="lazy" class="h-full w-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">` : ''}
-                  <span aria-hidden="true" class="h-full w-full items-center justify-center rounded-lg bg-slate-50 ${getCompanyLogoUrl(company) ? 'hidden' : 'flex'}">${escapeHtml(company.slice(0, 1).toUpperCase())}</span>
-                </div>
+            <div class="flex flex-1 flex-col p-5">
+              <div class="mb-4 flex items-start gap-3">
+                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-slate-100 bg-slate-50 text-lg font-extrabold text-emerald-700">${escapeHtml(company.slice(0, 1).toUpperCase())}</div>
                 <div class="min-w-0 flex-1">
                   <h3 class="break-words whitespace-normal text-base font-bold leading-6 text-slate-900">${escapeHtml(title)}</h3>
                   <p class="mt-1 text-sm font-semibold text-emerald-700">${escapeHtml(company)}</p>
                 </div>
               </div>
 
-              <div class="job-card-meta mb-3 flex flex-wrap gap-2 text-xs">
+              <div class="mb-3 flex flex-wrap gap-2 text-xs">
                 <span class="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1.5 text-slate-600">📍 ${escapeHtml(location)}</span>
                 ${workArrangement ? `<span class="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1.5 font-medium text-emerald-700">🏠 ${workArrangement}</span>` : ''}
                 ${job.job_type ? `<span class="inline-flex items-center gap-1 rounded-full bg-indigo-50 px-2.5 py-1.5 text-indigo-700">💼 ${escapeHtml(job.job_type)}</span>` : ''}
               </div>
 
-              ${tags.length ? `<div class="job-card-tags mb-4 flex flex-wrap gap-1.5">${tags.map(tag => `<span class="rounded-full border border-blue-100 bg-blue-50 px-2.5 py-1 text-[11px] font-medium text-blue-700">${escapeHtml(tag)}</span>`).join('')}</div>` : ''}
+              <div class="mb-4 rounded-xl border border-emerald-100 bg-emerald-50/70 px-3.5 py-3">
+                <p class="mb-0.5 text-[11px] font-semibold uppercase tracking-wide text-emerald-700">Salary</p>
+                <p class="text-sm font-bold text-slate-800">💷 ${escapeHtml(salary)}</p>
+              </div>
 
-              <div class="job-card-actions mt-auto border-t border-slate-100 pt-4">
-                <a href="${escapeHtml(applyUrl)}" target="_blank" rel="noopener noreferrer" class="job-card-apply block w-full rounded-xl bg-emerald-600 px-4 py-3 text-center text-sm font-bold text-white shadow-sm transition hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">Apply Now <span aria-hidden="true">→</span></a>
-                <div class="job-card-footer mt-2 flex items-center justify-between gap-2">
+              ${tags.length ? `<div class="mb-4 flex flex-wrap gap-1.5">${tags.map(tag => `<span class="rounded-full border border-blue-100 bg-blue-50 px-2.5 py-1 text-[11px] font-medium text-blue-700">${escapeHtml(tag)}</span>`).join('')}</div>` : ''}
+
+              <div class="mt-auto border-t border-slate-100 pt-4">
+                <a href="${escapeHtml(applyUrl)}" target="_blank" rel="noopener noreferrer" class="block w-full rounded-xl bg-emerald-600 px-4 py-3 text-center text-sm font-bold text-white shadow-sm transition hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">Apply Now <span aria-hidden="true">→</span></a>
+                <div class="mt-2 flex items-center justify-between gap-2">
                   <button type="button" onclick="toggleSaveJob(event, '${escapeJs(saveUrl)}')" class="rounded-lg px-3 py-2 text-xs font-semibold ${saved ? 'text-amber-700' : 'text-slate-500 hover:bg-amber-50 hover:text-amber-700'}">${saved ? '♥ Saved job' : '♡ Save job'}</button>
                   <button type="button" onclick='shareJob(${JSON.stringify(job).replace(/'/g, "&#39;")})' class="rounded-lg px-3 py-2 text-xs font-semibold text-slate-500 hover:bg-blue-50 hover:text-blue-700">↗ Share</button>
                 </div>
@@ -919,15 +832,13 @@ const whatsappUrl =
 
       navigator.clipboard.writeText(siteUrl).then(() => {
 
-        const btnTexts = [
-          document.getElementById('copyBtnText'),
-          document.getElementById('mobileCopyBtnText')
-        ].filter(Boolean);
+        const btnText =
+          document.getElementById('copyBtnText');
 
-        btnTexts.forEach((btnText) => { btnText.innerText = "Copied! ✓"; });
+        btnText.innerText = "Copied! ✓";
 
         setTimeout(() => {
-          btnTexts.forEach((btnText) => { btnText.innerText = "Copy Link"; });
+          btnText.innerText = "Copy Link";
         }, 2000);
 
       });
@@ -967,7 +878,6 @@ const whatsappUrl =
       const appContent = document.getElementById('appContent');
       const button = document.getElementById('authButton');
       const text = document.getElementById('authButtonText');
-      const mobileButton = document.getElementById('mobileAuthButton');
 
       if (user) {
         loginPage.classList.add('hidden');
@@ -976,11 +886,6 @@ const whatsappUrl =
         if (button) {
           button.onclick = signOutUser;
           button.title = 'Click to sign out';
-        }
-        if (mobileButton) {
-          mobileButton.onclick = signOutUser;
-          mobileButton.title = 'Signed in — tap to sign out';
-          mobileButton.setAttribute('aria-label', 'Signed in; tap to sign out');
         }
         updateSavedCount();
         fetchJobs();
@@ -991,11 +896,6 @@ const whatsappUrl =
         if (button) {
           button.onclick = signInWithGoogle;
           button.title = 'Sign in with Google';
-        }
-        if (mobileButton) {
-          mobileButton.onclick = signInWithGoogle;
-          mobileButton.title = 'Sign in with Google';
-          mobileButton.setAttribute('aria-label', 'Sign in with Google');
         }
         allJobs = [];
       }
