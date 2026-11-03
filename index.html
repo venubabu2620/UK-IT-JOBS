@@ -694,7 +694,7 @@ const whatsappUrl =
           .replace(/[^a-z0-9-]/g, '');
         if (base.length >= 3) domain = base + '.com';
       }
-      return domain ? `https://logo.clearbit.com/${domain}?size=128` : '';
+      return domain ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=128` : '';
     }
 
     function renderJobs(jobs) {
