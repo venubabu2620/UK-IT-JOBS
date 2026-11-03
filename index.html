@@ -736,7 +736,7 @@ const whatsappUrl =
             <div class="flex flex-1 flex-col p-5">
               <div class="mb-4 flex items-start gap-3">
                 <div class="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-slate-100 bg-white p-1.5">
-                  <img src="${escapeHtml(companyLogo)}" alt="${escapeHtml(company)} logo" loading="lazy" class="h-full w-full object-contain" onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Crect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23f1f5f9%22/%3E%3Cpath d=%22M18 50V18h28v32M12 50h40M25 26h4m6 0h4m-14 8h4m6 0h4m-14 8h4m6 0h4%22 stroke=%22%2394a3b8%22 stroke-width=%223%22 fill=%22none%22 stroke-linecap=%22round%22/%3E%3C/svg%3E';">
+                  <img src="${escapeHtml(companyLogo)}" alt="${escapeHtml(company)} logo" loading="lazy" class="h-full w-full object-contain" onerror="this.onerror=null;const fallback=document.createElement('span');fallback.className='flex h-full w-full items-center justify-center rounded-lg bg-slate-50 text-lg font-bold text-emerald-700';fallback.textContent=(this.dataset.initial||'?');this.replaceWith(fallback);" data-initial="${escapeHtml((company.trim().charAt(0) || '?').toUpperCase())}">
                 </div>
                 <div class="min-w-0 flex-1">
                   <h3 class="break-words whitespace-normal text-base font-bold leading-6 text-slate-900">${escapeHtml(title)}</h3>
