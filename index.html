@@ -662,36 +662,11 @@ const whatsappUrl =
     }
 
     function getCompanyLogoUrl(job) {
-      const company = String(job.company || '').trim();
+      // Only use a logo URL explicitly supplied by the job data.
+      // Do not use generic favicon services: they can return a globe icon
+      // even when the employer has no logo. The card will show an initial instead.
       const direct = job.company_logo || job.logo_url || job.company_logo_url || job.logo;
-      if (direct && /^https?:\/\//i.test(String(direct))) return String(direct);
-
-      const knownDomains = {
-        'searchability': 'searchability.com',
-        'arc it recruitment': 'arcitrecruitment.com',
-        'universal music holdings': 'universalmusic.com',
-        'universal music group': 'universalmusic.com',
-        'ocho': 'ocho.co.uk',
-        'organox': 'organox.com',
-        'barclays': 'barclays.co.uk',
-        'motorola solutions': 'motorolasolutions.com',
-        'harvey nash': 'harveynash.com',
-        'adaptable recruitment': 'adaptablerecruitment.com'
-      };
-      const key = company.toLowerCase();
-      let domain = knownDomains[key];
-      if (!domain) {
-        const website = job.company_website || job.website || job.company_url;
-        if (website) {
-          try { domain = new URL(/^https?:\/\//i.test(website) ? website : `https://${website}`).hostname; } catch (_) {}
-        }
-      }
-      if (!domain) {
-        // Best-effort domain guess for companies without a website field.
-        domain = key.replace(/\b(ltd|limited|plc|inc|llc|group|holdings)\b/g, '')
-          .replace(/[^a-z0-9]+/g, '').trim() + '.com';
-      }
-      return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=128`;
+      return direct && /^https?:\/\//i.test(String(direct)) ? String(direct) : '';
     }
 
     function renderJobs(jobs) {
@@ -735,8 +710,8 @@ const whatsappUrl =
             <div class="h-1.5 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500"></div>
             <div class="flex flex-1 flex-col p-5">
               <div class="mb-4 flex items-start gap-3">
-                <div class="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-slate-100 bg-white p-1.5">
-                  <img src="${escapeHtml(companyLogo)}" alt="${escapeHtml(company)} logo" loading="lazy" class="h-full w-full object-contain" onerror="this.onerror=null;const fallback=document.createElement('span');fallback.className='flex h-full w-full items-center justify-center rounded-lg bg-slate-50 text-lg font-bold text-emerald-700';fallback.textContent=(this.dataset.initial||'?');this.replaceWith(fallback);" data-initial="${escapeHtml((company.trim().charAt(0) || '?').toUpperCase())}">
+                <div class="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-slate-100 bg-slate-50 p-1.5">
+                  ${companyLogo ? `<img src="${escapeHtml(companyLogo)}" alt="${escapeHtml(company)} logo" loading="lazy" class="h-full w-full object-contain" onerror="this.onerror=null;const fallback=document.createElement('span');fallback.className='flex h-full w-full items-center justify-center rounded-lg bg-slate-50 text-lg font-bold text-emerald-700';fallback.textContent=(this.dataset.initial||'?');this.replaceWith(fallback);" data-initial="${escapeHtml((company.trim().charAt(0) || '?').toUpperCase())}">` : `<span class="flex h-full w-full items-center justify-center rounded-lg bg-slate-50 text-lg font-bold text-emerald-700">${escapeHtml((company.trim().charAt(0) || '?').toUpperCase())}</span>`}
                 </div>
                 <div class="min-w-0 flex-1">
                   <h3 class="break-words whitespace-normal text-base font-bold leading-6 text-slate-900">${escapeHtml(title)}</h3>
@@ -989,4 +964,3 @@ function toggleMobileMenu(open) {
 
 </body>
 </html>
- 
