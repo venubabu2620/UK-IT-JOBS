@@ -1,6 +1,15 @@
-	<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
+<meta property="og:site_name" content="UK IT Jobs">
+<meta property="og:type" content="website">
+<meta property="og:title" content="UK IT Jobs — Latest Technology Jobs in the UK">
+<meta property="og:description" content="Find the latest IT, software, developer, data, cloud and technology jobs across the UK.">
+<meta property="og:url" content="https://venubabu2620.github.io/UK-IT-JOBS/">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="UK IT Jobs — Latest Technology Jobs in the UK">
+<meta name="twitter:description" content="Find the latest IT and technology jobs across the UK.">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -26,7 +35,104 @@
   <!-- Tailwind & Supabase Scripts -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  /* London skyline login background */
+  #loginPage {
+    background-color: #eaf8fc;
+    background-image:
+      linear-gradient(
+        to bottom,
+        rgba(235, 249, 255, 0.20),
+        rgba(255, 255, 255, 0.15)
+      ),
+      url("https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=2400&q=85");
 
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+  /* Keep the login card readable */
+  #loginPage .login-card {
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 0 24px 70px rgba(15, 54, 77, 0.20);
+  }
+
+  /* Improve the background position on mobile */
+  @media (max-width: 640px) {
+    #loginPage {
+      background-position: 57% center;
+    }
+  }
+    /* Mobile responsive layout */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+
+  img,
+  svg,
+  video,
+  canvas {
+    max-width: 100%;
+  }
+
+  /* Keep search and main content within the screen */
+  main {
+    width: 100%;
+    min-width: 0;
+  }
+
+  #searchInput {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* Improve the layout on mobile phones */
+  @media (max-width: 640px) {
+    header > div {
+      gap: 10px;
+    }
+
+    header > div > div {
+      max-width: 100%;
+      flex-wrap: wrap;
+    }
+
+    main {
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+
+    main h2 {
+      font-size: 1.75rem;
+      line-height: 1.2;
+    }
+
+    #jobList,
+    #savedJobsList {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    #jobList article {
+      min-width: 0;
+      max-width: 100%;
+    }
+  }
+</style>
   <!-- Counter.dev Analytics -->
   <script
     src="https://cdn.counter.dev/script.js"
@@ -37,9 +143,26 @@
 
 <body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col antialiased">
 
+  <!-- Google-only login screen -->
+  <section id="loginPage" class="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto px-4 py-8">
+    <div class="login-card w-full max-w-md rounded-2xl p-7 text-center">
+      <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-2xl">🇬🇧</div>
+      <h1 class="text-2xl font-extrabold text-slate-900">UK <span class="text-emerald-600">IT</span> Jobs</h1>
+      <p class="mt-2 mb-6 text-sm text-slate-500">Sign in with Google to explore the latest UK technology jobs.</p>
+      <button id="googleLoginButton" type="button" onclick="signInWithGoogle()" class="flex w-full items-center justify-center gap-3 rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60">
+        <span class="text-lg font-bold">G</span>
+        <span id="googleLoginButtonText">Sign in with Google</span>
+      </button>
+      <p id="loginPageMessage" role="status" aria-live="polite" class="mt-4 text-center text-sm"></p>
+    </div>
+  </section>
+
+  <div id="appContent" class="hidden">
+
+
   <!-- Sticky Header -->
   <header class="bg-white border-b border-slate-200 sticky top-0 z-20 shadow-sm">
-    <div class="max-w-6xl mx-auto px-4 py-3.5 flex flex-wrap items-center justify-between gap-3">
+  <div class="max-w-6xl mx-auto px-4 py-3.5 flex flex-wrap items-center justify-between gap-3">
 
       <div class="flex items-center gap-3">
         <h1 class="text-xl font-bold tracking-tight text-slate-800">
@@ -51,18 +174,20 @@
         </span>
       </div>
 
-      <!-- Saved Jobs + 1-Click Share Buttons -->
+      <!-- Header quick links: Legal dropdown and Contact -->
       <div class="flex items-center gap-2">
-
-        <!-- Job Alerts -->
-        <button
-          onclick="showJobAlertModal()"
-          class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-lg border border-emerald-200 transition"
-          title="Create a job alert"
-        >
-          <span class="text-sm">🔔</span>
-          <span class="hidden sm:inline">Alerts</span>
-        </button>
+        <a href="./cv-templates.html" class="inline-flex items-center gap-1 rounded-lg bg-violet-50 border border-violet-200 px-3 py-2 text-xs font-bold text-violet-700 hover:bg-violet-100">👑 CV Templates</a>
+        <details class="relative group">
+          <summary class="list-none cursor-pointer inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 hover:border-emerald-500 hover:text-emerald-700">
+            Legal <span aria-hidden="true">▾</span>
+          </summary>
+          <div class="absolute left-0 sm:left-auto sm:right-0 mt-2 w-52 max-w-[calc(100vw-2rem)] rounded-xl border border-slate-200 bg-white p-2 shadow-xl z-50">
+            <a class="block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-700" href="./privacy-policy.html">Privacy Policy</a>
+            <a class="block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-700" href="./terms-and-conditions.html">Terms &amp; Conditions</a>
+            <a class="block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-700" href="./cookies-policy.html">Cookies Policy</a>
+          </div>
+        </details>
+        <a href="./contact.html" class="inline-flex items-center gap-1 rounded-lg border border-emerald-600 px-3 py-2 text-xs font-semibold text-emerald-700 hover:bg-emerald-50">✉ <span>Contact</span></a>
 
         <!-- Saved Jobs -->
         <button
@@ -74,7 +199,15 @@
           <span class="hidden sm:inline">Saved</span>
           <span id="savedCount" class="bg-amber-200 text-amber-800 px-1.5 py-0.5 rounded-full text-[10px]">0</span>
         </button>
-
+      <!-- Login / Account Button -->
+        <button
+        id="authButton"
+        onclick="openAuthModal()"
+        class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg shadow-sm transition"
+        >
+        <span>🔑</span>
+        <span id="authButtonText">Login</span>
+        </button>
         <!-- 1-Click Share Buttons -->
         <div class="flex items-center gap-2">
 
@@ -120,7 +253,6 @@
       </div>
     </div>
   </header>
-
   <!-- Main Content -->
   <main class="max-w-6xl mx-auto px-4 py-8 flex-grow w-full">
 
@@ -234,6 +366,19 @@
       <div id="savedJobsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
     </section>
 
+    <!-- Premium CV Templates promotion -->
+    <section class="mb-7 overflow-hidden rounded-2xl border border-violet-200 bg-gradient-to-r from-violet-50 via-white to-emerald-50 p-5 sm:p-7 shadow-sm">
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p class="text-xs font-bold uppercase tracking-wider text-violet-700">Premium service</p>
+          <h2 class="mt-1 text-xl sm:text-2xl font-extrabold text-slate-900">UK Job CV Templates</h2>
+          <p class="mt-2 max-w-xl text-sm text-slate-600">Professional, ATS-friendly CV templates tailored to UK job applications. Preview designs, choose your role, and get an editable Word template.</p>
+          <div class="mt-3 flex flex-wrap gap-2 text-xs font-medium text-slate-600"><span>✓ UK CV format</span><span>✓ ATS-conscious layouts</span><span>✓ Role-specific</span><span>✓ £4.99 one-time</span></div>
+        </div>
+        <a href="./cv-templates.html" class="inline-flex shrink-0 items-center justify-center rounded-xl bg-emerald-600 px-5 py-3 text-sm font-bold text-white shadow-sm hover:bg-emerald-700">Browse CV Templates →</a>
+      </div>
+    </section>
+
     <!-- Job Cards -->
     <div id="jobList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
 
@@ -245,71 +390,34 @@
 
   </main>
 
-  <!-- Job Alert Modal -->
-  <div id="jobAlertModal" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm p-4">
-    <div class="min-h-full flex items-center justify-center">
-      <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
-        <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
-          <div>
-            <h3 class="text-lg font-bold text-slate-900">Create Job Alert 🔔</h3>
-            <p class="text-xs text-slate-500 mt-1">Get new matching UK IT jobs by email.</p>
-          </div>
-          <button onclick="hideJobAlertModal()" class="text-slate-400 hover:text-slate-700 text-xl" aria-label="Close">×</button>
-        </div>
-
-        <form id="jobAlertForm" class="p-5 space-y-4">
-          <div>
-            <label for="alertEmail" class="block text-xs font-semibold text-slate-700 mb-1.5">Email address</label>
-            <input id="alertEmail" type="email" required maxlength="254"
-              placeholder="you@example.com"
-              class="w-full px-3 py-2.5 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
-          </div>
-
-          <div>
-            <label for="alertKeywords" class="block text-xs font-semibold text-slate-700 mb-1.5">Keywords</label>
-            <input id="alertKeywords" type="text" required maxlength="200"
-              placeholder="Python, Data Analyst, DevOps..."
-              class="w-full px-3 py-2.5 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
-            <p class="text-[11px] text-slate-400 mt-1">Use comma-separated keywords. A job matching any keyword can trigger the alert.</p>
-          </div>
-
-          <div>
-            <label for="alertLocation" class="block text-xs font-semibold text-slate-700 mb-1.5">Location <span class="font-normal text-slate-400">(optional)</span></label>
-            <input id="alertLocation" type="text" maxlength="120"
-              placeholder="London, Manchester, Remote..."
-              class="w-full px-3 py-2.5 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
-          </div>
-
-          <label class="flex items-center gap-2 text-sm text-slate-700">
-            <input id="alertRemoteOnly" type="checkbox" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
-            Remote / hybrid jobs only
-          </label>
-
-          <div id="jobAlertMessage" class="hidden text-xs rounded-lg px-3 py-2"></div>
-
-          <div class="flex gap-2 pt-1">
-            <button type="button" onclick="hideJobAlertModal()"
-              class="flex-1 py-2.5 bg-white hover:bg-slate-50 text-slate-600 text-sm font-semibold rounded-lg border border-slate-200">
-              Cancel
-            </button>
-            <button id="jobAlertSubmit" type="submit"
-              class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-lg transition">
-              Create Alert
-            </button>
-          </div>
-
-          <p class="text-[10px] leading-relaxed text-slate-400">
-            By creating an alert, you agree to receive job-alert emails. You can stop the alert using the unsubscribe link in an email.
-          </p>
-        </form>
+  <!-- Footer -->
+  <footer class="border-t border-slate-200 bg-white">
+    <div class="mx-auto grid max-w-6xl grid-cols-1 gap-8 px-4 py-8 sm:grid-cols-2 md:grid-cols-4">
+      <div class="sm:col-span-2">
+        <a href="/UK-IT-JOBS/" class="text-lg font-extrabold tracking-tight text-slate-900">UK<span class="text-emerald-600">IT</span> Jobs</a>
+        <p class="mt-2 max-w-md text-sm leading-6 text-slate-500">Discover technology opportunities across the UK. Always check the employer's official listing for the latest details.</p>
+      </div>
+      <div>
+        <h2 class="text-sm font-bold text-slate-800">Information</h2>
+        <ul class="mt-3 space-y-2 text-sm text-slate-500">
+          <li><a class="hover:text-emerald-700" href="./privacy-policy.html">Privacy Policy</a></li>
+          <li><a class="hover:text-emerald-700" href="./terms-and-conditions.html">Terms &amp; Conditions</a></li>
+          <li><a class="hover:text-emerald-700" href="./cookies-policy.html">Cookies Policy</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="text-sm font-bold text-slate-800">Get in touch</h2>
+        <ul class="mt-3 space-y-2 text-sm text-slate-500">
+          <li><a class="hover:text-emerald-700" href="./contact.html">Contact Us</a></li>
+          <li><a class="hover:text-emerald-700" href="mailto:support.ukitjobs@gmail.com">Email us</a></li>
+        </ul>
       </div>
     </div>
-  </div>
-
-  <!-- Footer -->
-  <footer class="text-center py-6 text-xs text-slate-400 border-t border-slate-200 bg-white">
-    © 2026 UK IT Jobs Daily. Direct application links.
+    <div class="border-t border-slate-100 px-4 py-4 text-center text-xs text-slate-400">© <span class="current-year">2026</span> UK IT Jobs. All rights reserved.</div>
   </footer>
+  <script>document.querySelectorAll('.current-year').forEach(el => el.textContent = new Date().getFullYear());</script>
+
+  </div>
 
   <script>
     const SUPABASE_URL = "https://mjmbpjulosdywzperdhe.supabase.co";
@@ -494,98 +602,27 @@ function shareJob(job) {
   const title = job.title || 'UK IT Job';
   const company = job.company || '';
   const location = job.location || '';
-  const applyUrl = job.apply_url || window.location.href;
-
-  const shareText =
-    `${title}${company ? ` at ${company}` : ''}${location ? ` — ${location}` : ''}`;
-
+const siteUrl = window.location.origin + window.location.pathname;
+const applyUrl = job.apply_url || '';
+const shareUrl =
+  `${siteUrl}?job=${encodeURIComponent(job.title || '')}`;
+const shareText =
+  `${title}${company ? ` at ${company}` : ''}${location ? ` — ${location}` : ''}\n\n` +
+  `View this job on UK IT Jobs:\n${shareUrl}\n\n` +
+  `Apply here:\n${applyUrl}`;
   if (navigator.share) {
     navigator.share({
       title: title,
       text: shareText,
-      url: applyUrl
+      url: shareUrl
     }).catch(() => {});
     return;
   }
 
-  const whatsappUrl =
-    `https://api.whatsapp.com/send?text=${encodeURIComponent(
-      `${shareText}\n\nApply here: ${applyUrl}`
-    )}`;
-
+const whatsappUrl =
+  `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
   window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
 }
-
-    function showJobAlertModal() {
-      document.getElementById('jobAlertModal').classList.remove('hidden');
-      document.getElementById('alertEmail').focus();
-    }
-
-    function hideJobAlertModal() {
-      document.getElementById('jobAlertModal').classList.add('hidden');
-      const message = document.getElementById('jobAlertMessage');
-      message.className = 'hidden text-xs rounded-lg px-3 py-2';
-      message.innerText = '';
-    }
-
-    function showAlertMessage(text, type = 'success') {
-      const message = document.getElementById('jobAlertMessage');
-      message.className = type === 'success'
-        ? 'text-xs rounded-lg px-3 py-2 bg-emerald-50 text-emerald-700 border border-emerald-200'
-        : 'text-xs rounded-lg px-3 py-2 bg-red-50 text-red-700 border border-red-200';
-      message.innerText = text;
-    }
-
-    document.getElementById('jobAlertForm').addEventListener('submit', async (event) => {
-      event.preventDefault();
-
-      const submit = document.getElementById('jobAlertSubmit');
-      const email = document.getElementById('alertEmail').value.trim().toLowerCase();
-      const keywords = document.getElementById('alertKeywords').value.trim();
-      const location = document.getElementById('alertLocation').value.trim();
-      const remoteOnly = document.getElementById('alertRemoteOnly').checked;
-
-      if (!email || !keywords) {
-        showAlertMessage('Please enter your email and at least one keyword.', 'error');
-        return;
-      }
-
-      submit.disabled = true;
-      submit.innerText = 'Saving...';
-
-      try {
-        const { error } = await supabaseClient
-          .from('job_alerts')
-          .insert({
-            email,
-            keywords,
-            location: location || null,
-            remote_only: remoteOnly,
-            active: true
-          });
-
-        if (error) throw error;
-
-        showAlertMessage('Alert created! We will email you when new matching jobs are found.');
-        document.getElementById('jobAlertForm').reset();
-
-        setTimeout(() => hideJobAlertModal(), 1800);
-      } catch (error) {
-        console.error('Job alert creation failed:', error);
-        showAlertMessage(
-          error.message || 'Could not create the alert. Please try again.',
-          'error'
-        );
-      } finally {
-        submit.disabled = false;
-        submit.innerText = 'Create Alert';
-      }
-    });
-
-    document.getElementById('jobAlertModal').addEventListener('click', (event) => {
-      if (event.target.id === 'jobAlertModal') hideJobAlertModal();
-    });
-
     async function fetchJobs() {
       const { data, error } = await supabaseClient
         .from('jobs')
@@ -611,79 +648,78 @@ function shareJob(job) {
     function renderJobs(jobs) {
       const container = document.getElementById('jobList');
       const countEl = document.getElementById('resultsCount');
+      countEl.innerText = `Showing ${jobs.length} available tech roles`;
 
-      countEl.innerText =
-        `Showing ${jobs.length} available tech roles`;
-
-      if (jobs.length === 0) {
-        container.innerHTML =
-          '<p class="col-span-full text-center text-slate-500 py-10">No matching IT jobs found for this search/filter.</p>';
-
+      if (!jobs.length) {
+        container.innerHTML = '<p class="col-span-full text-center text-slate-500 py-10">No matching IT jobs found for this search/filter.</p>';
         return;
       }
 
-      container.innerHTML = jobs.map(job => `
-        <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+      container.innerHTML = jobs.map(job => {
+        const title = job.title || 'Untitled role';
+        const company = job.company || 'Unknown company';
+        const location = job.location || 'United Kingdom';
+        const description = job.job_description || 'No description available.';
+        const salary = job.salary_min && job.salary_max
+          ? `£${Number(job.salary_min).toLocaleString()} – £${Number(job.salary_max).toLocaleString()}`
+          : job.salary_max ? `Up to £${Number(job.salary_max).toLocaleString()}`
+          : job.salary_min ? `From £${Number(job.salary_min).toLocaleString()}`
+          : 'Salary not disclosed';
+        const searchableDetails = `${title} ${location} ${description} ${job.job_type || ''} ${job.work_type || ''}`.toLowerCase();
+        const workArrangement = /remote|work from home|work-from-home|fully distributed/.test(searchableDetails) ? 'Remote'
+          : /hybrid/.test(searchableDetails) ? 'Hybrid'
+          : /on[- ]site|onsite|office based|office-based/.test(searchableDetails) ? 'On-site' : '';
+        const tags = [];
+        const tagText = `${title} ${description}`.toLowerCase();
+        [
+          ['JavaScript', /javascript|typescript|node\.?js/],
+          ['Python', /python/],
+          ['AI / ML', /artificial intelligence|machine learning|\bai\b|\bml\b/],
+          ['Cloud', /cloud|aws|azure|gcp/],
+          ['Data', /data analyst|data engineer|data scientist|analytics|power bi|sql/],
+          ['Cyber Security', /cyber security|cybersecurity|soc analyst|penetration test/],
+          ['DevOps', /devops|kubernetes|terraform|ci\/cd/]
+        ].forEach(([label, pattern]) => { if (pattern.test(tagText) && tags.length < 4) tags.push(label); });
 
-          <div>
+        const saved = isJobSaved(job);
+        const applyUrl = job.apply_url || '#';
+        const saveUrl = applyUrl === '#' ? '' : applyUrl;
 
-            <div class="flex items-start justify-between gap-2 mb-2">
-
-              <h3 class="font-semibold text-slate-900 line-clamp-1 pr-1">
-                ${escapeHtml(job.title || 'Untitled role')}
-              </h3>
-
-              <div class="flex items-center gap-1.5 shrink-0">
-                <button
-                  onclick="toggleSaveJob(event, '${escapeJs(job.apply_url || '')}')"
-                  class="save-job-btn inline-flex items-center gap-1 px-2 py-1 rounded-lg border text-[10px] font-semibold transition ${isJobSaved(job) ? 'bg-amber-100 text-amber-700 border-amber-300' : 'bg-white text-slate-500 border-slate-200 hover:bg-amber-50 hover:text-amber-700'}"
-                  title="${isJobSaved(job) ? 'Remove from saved jobs' : 'Save this job'}"
-                >
-                  <span class="text-sm">${isJobSaved(job) ? '♥' : '♡'}</span>
-                  <span>${isJobSaved(job) ? 'Saved' : 'Save'}</span>
-                </button>
-
-<button
-  onclick='shareJob(${JSON.stringify(job).replace(/'/g, "&#39;")})'
-  class="inline-flex items-center gap-1 px-2 py-1 rounded-lg border border-slate-200 bg-white text-slate-500 hover:bg-blue-50 hover:text-blue-700 text-[10px] font-semibold transition"
-  title="Share this job"
->
-  <span class="text-sm">↗</span>
-  <span>Share</span>
-</button>
-
-                <span class="text-[10px] font-medium bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded border border-emerald-200">
-                  IT
-                </span>
+        return `
+          <article class="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-emerald-200 hover:shadow-lg">
+            <div class="h-1.5 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500"></div>
+            <div class="flex flex-1 flex-col p-5">
+              <div class="mb-4 flex items-start gap-3">
+                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-slate-100 bg-slate-50 text-lg font-extrabold text-emerald-700">${escapeHtml(company.slice(0, 1).toUpperCase())}</div>
+                <div class="min-w-0 flex-1">
+                  <h3 class="break-words whitespace-normal text-base font-bold leading-6 text-slate-900">${escapeHtml(title)}</h3>
+                  <p class="mt-1 text-sm font-semibold text-emerald-700">${escapeHtml(company)}</p>
+                </div>
               </div>
 
+              <div class="mb-3 flex flex-wrap gap-2 text-xs">
+                <span class="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1.5 text-slate-600">📍 ${escapeHtml(location)}</span>
+                ${workArrangement ? `<span class="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1.5 font-medium text-emerald-700">🏠 ${workArrangement}</span>` : ''}
+                ${job.job_type ? `<span class="inline-flex items-center gap-1 rounded-full bg-indigo-50 px-2.5 py-1.5 text-indigo-700">💼 ${escapeHtml(job.job_type)}</span>` : ''}
+              </div>
+
+              <div class="mb-4 rounded-xl border border-emerald-100 bg-emerald-50/70 px-3.5 py-3">
+                <p class="mb-0.5 text-[11px] font-semibold uppercase tracking-wide text-emerald-700">Salary</p>
+                <p class="text-sm font-bold text-slate-800">💷 ${escapeHtml(salary)}</p>
+              </div>
+
+              ${tags.length ? `<div class="mb-4 flex flex-wrap gap-1.5">${tags.map(tag => `<span class="rounded-full border border-blue-100 bg-blue-50 px-2.5 py-1 text-[11px] font-medium text-blue-700">${escapeHtml(tag)}</span>`).join('')}</div>` : ''}
+
+              <div class="mt-auto border-t border-slate-100 pt-4">
+                <a href="${escapeHtml(applyUrl)}" target="_blank" rel="noopener noreferrer" class="block w-full rounded-xl bg-emerald-600 px-4 py-3 text-center text-sm font-bold text-white shadow-sm transition hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">Apply Now <span aria-hidden="true">→</span></a>
+                <div class="mt-2 flex items-center justify-between gap-2">
+                  <button type="button" onclick="toggleSaveJob(event, '${escapeJs(saveUrl)}')" class="rounded-lg px-3 py-2 text-xs font-semibold ${saved ? 'text-amber-700' : 'text-slate-500 hover:bg-amber-50 hover:text-amber-700'}">${saved ? '♥ Saved job' : '♡ Save job'}</button>
+                  <button type="button" onclick='shareJob(${JSON.stringify(job).replace(/'/g, "&#39;")})' class="rounded-lg px-3 py-2 text-xs font-semibold text-slate-500 hover:bg-blue-50 hover:text-blue-700">↗ Share</button>
+                </div>
+              </div>
             </div>
-
-            <p class="text-xs font-medium text-emerald-600 mb-1">
-              ${escapeHtml(job.company || 'Unknown company')}
-            </p>
-
-            <p class="text-xs text-slate-400 mb-3">
-              📍 ${escapeHtml(job.location || 'United Kingdom')}
-            </p>
-
-            <p class="text-xs text-slate-600 line-clamp-3 mb-4 leading-relaxed">
-              ${escapeHtml(job.job_description || 'No description available.')}
-            </p>
-
-          </div>
-
-          <a
-            href="${escapeHtml(job.apply_url || '#')}"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="block text-center w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium rounded-lg transition"
-          >
-            Apply Now &rarr;
-          </a>
-
-        </div>
-      `).join('');
+          </article>`;
+      }).join('');
     }
 
     function filterAndRender() {
@@ -807,9 +843,86 @@ function shareJob(job) {
 
       });
     }
+// ===== Google-only authentication =====
+    function showAuthMessage(message, isError = false) {
+      const element = document.getElementById('loginPageMessage');
+      if (!element) return;
+      element.textContent = message;
+      element.className = `mt-4 text-center text-sm ${isError ? 'text-red-600' : 'text-emerald-700'}`;
+    }
+
+    async function signInWithGoogle() {
+      const button = document.getElementById('googleLoginButton');
+      const buttonText = document.getElementById('googleLoginButtonText');
+      button.disabled = true;
+      buttonText.textContent = 'Connecting to Google...';
+      showAuthMessage('Redirecting to Google sign-in...');
+
+      try {
+        const { error } = await supabaseClient.auth.signInWithOAuth({
+          provider: 'google',
+          options: {
+            redirectTo: window.location.origin + window.location.pathname
+          }
+        });
+        if (error) throw error;
+      } catch (error) {
+        showAuthMessage(error.message || 'Google sign-in failed. Please try again.', true);
+        button.disabled = false;
+        buttonText.textContent = 'Sign in with Google';
+      }
+    }
+
+    function updateAuthUI(user) {
+      const loginPage = document.getElementById('loginPage');
+      const appContent = document.getElementById('appContent');
+      const button = document.getElementById('authButton');
+      const text = document.getElementById('authButtonText');
+
+      if (user) {
+        loginPage.classList.add('hidden');
+        appContent.classList.remove('hidden');
+        if (text) text.textContent = user.email ? user.email.split('@')[0] : 'Sign out';
+        if (button) {
+          button.onclick = signOutUser;
+          button.title = 'Click to sign out';
+        }
+        updateSavedCount();
+        fetchJobs();
+      } else {
+        appContent.classList.add('hidden');
+        loginPage.classList.remove('hidden');
+        if (text) text.textContent = 'Sign in with Google';
+        if (button) {
+          button.onclick = signInWithGoogle;
+          button.title = 'Sign in with Google';
+        }
+        allJobs = [];
+      }
+    }
+
+    async function signOutUser() {
+      const { error } = await supabaseClient.auth.signOut();
+      if (error) {
+        alert('Could not sign out: ' + error.message);
+        return;
+      }
+      updateAuthUI(null);
+    }
+
+    async function initialiseAuth() {
+      const { data, error } = await supabaseClient.auth.getSession();
+      if (error) console.error('Could not retrieve session:', error);
+      updateAuthUI(data?.session?.user || null);
+
+      supabaseClient.auth.onAuthStateChange((event, session) => {
+        updateAuthUI(session?.user || null);
+      });
+    }
+
+    initialiseAuth();
 
     updateSavedCount();
-    fetchJobs();
   </script>
 
 </body>
