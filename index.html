@@ -160,95 +160,53 @@
   <div id="appContent" class="hidden">
 
 
-  <!-- Sticky Header -->
-  <header class="bg-white border-b border-slate-200 sticky top-0 z-20 shadow-sm">
-  <div class="w-full max-w-6xl mx-auto px-4 py-3.5 flex flex-col items-center justify-center gap-3">
+  <!-- Sticky Header: large brand left, share/legal right, account actions below -->
+  <header class="bg-white sticky top-0 z-20 shadow-sm">
+    <div class="w-full max-w-6xl mx-auto px-4 py-4">
+      <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+        <!-- Brand -->
+        <div class="flex items-center gap-3 min-w-0">
+          <a href="/UK-IT-JOBS/" aria-label="UK IT Jobs homepage" class="flex items-center gap-3 rounded hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            <span class="text-4xl sm:text-5xl leading-none" aria-hidden="true">🇬🇧</span>
+            <span class="block">
+              <span class="block text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900">UK <span class="text-emerald-600">IT</span> Jobs</span>
+              <span class="block mt-1 text-sm sm:text-base font-medium text-slate-500">Daily UK Tech &amp; IT Opportunities</span>
+            </span>
+          </a>
+        </div>
 
-      <div class="flex items-center justify-center gap-3">
-        <h1 class="text-xl font-bold tracking-tight text-slate-800">
-          <a href="/UK-IT-JOBS/" aria-label="UK IT Jobs homepage" class="hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-emerald-500 rounded">UK<span class="text-emerald-600">IT</span> Jobs</a>
-        </h1>
-
-        <span class="hidden sm:inline-block text-xs bg-emerald-100 text-emerald-800 font-semibold px-2.5 py-1 rounded-full">
-          🇬🇧 High-Volume Tech Board
-        </span>
-      </div>
-
-      <!-- Header quick links: Legal dropdown and Contact -->
-      <div class="flex flex-wrap items-center justify-center gap-2">
-        <a href="./cv-templates.html" class="inline-flex items-center gap-1 rounded-lg bg-violet-50 border border-violet-200 px-3 py-2 text-xs font-bold text-violet-700 hover:bg-violet-100">👑 CV Templates</a>
-        <details class="relative group">
-          <summary class="list-none cursor-pointer inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 hover:border-emerald-500 hover:text-emerald-700">
-            Legal <span aria-hidden="true">▾</span>
-          </summary>
-          <div class="absolute left-0 sm:left-auto sm:right-0 mt-2 w-52 max-w-[calc(100vw-2rem)] rounded-xl border border-slate-200 bg-white p-2 shadow-xl z-50">
-            <a class="block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-700" href="./privacy-policy.html">Privacy Policy</a>
-            <a class="block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-700" href="./terms-and-conditions.html">Terms &amp; Conditions</a>
-            <a class="block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-700" href="./cookies-policy.html">Cookies Policy</a>
+        <!-- Right-side actions -->
+        <div class="flex flex-col items-start lg:items-end gap-3">
+          <!-- Social links and Legal in one line -->
+          <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+            <a href="https://api.whatsapp.com/send?text=Check%20out%20this%20free%20UK%20IT%20Job%20Board%20with%20live%20tech%20roles%3A%20https%3A%2F%2Fvenubabu2620.github.io%2FUK-IT-JOBS%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on WhatsApp" title="Share on WhatsApp" class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#25D366] text-white shadow-sm hover:bg-[#20ba59]">
+              <svg class="h-5 w-5 fill-current" viewBox="0 0 24 24" aria-hidden="true"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+            </a>
+            <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fvenubabu2620.github.io%2FUK-IT-JOBS%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on LinkedIn" title="Share on LinkedIn" class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#0A66C2] text-white shadow-sm hover:bg-[#084e96]">
+              <svg class="h-5 w-5 fill-current" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+            </a>
+            <button onclick="copySiteLink()" id="copyBtn" class="inline-flex h-10 items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-800 shadow-sm hover:border-slate-300 hover:bg-slate-50" title="Copy website link">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+              <span id="copyBtnText">Copy Link</span>
+            </button>
+            <details class="relative group">
+              <summary class="list-none cursor-pointer inline-flex h-10 items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 hover:border-emerald-500 hover:text-emerald-700">Legal <span aria-hidden="true">▾</span></summary>
+              <div class="absolute right-0 mt-2 w-52 max-w-[calc(100vw-2rem)] rounded-xl border border-slate-200 bg-white p-2 shadow-xl z-50">
+                <a class="block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-700" href="./privacy-policy.html">Privacy Policy</a>
+                <a class="block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-700" href="./terms-and-conditions.html">Terms &amp; Conditions</a>
+                <a class="block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-700" href="./cookies-policy.html">Cookies Policy</a>
+              </div>
+            </details>
           </div>
-        </details>
-        <a href="./contact.html" class="inline-flex items-center gap-1 rounded-lg border border-emerald-600 px-3 py-2 text-xs font-semibold text-emerald-700 hover:bg-emerald-50">✉ <span>Contact</span></a>
 
-        <!-- Saved Jobs -->
-        <button
-          onclick="showSavedJobs()"
-          class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 text-xs font-semibold rounded-lg border border-amber-200 transition"
-          title="View saved jobs"
-        >
-          <span class="text-sm">♥</span>
-          <span class="hidden sm:inline">Saved</span>
-          <span id="savedCount" class="bg-amber-200 text-amber-800 px-1.5 py-0.5 rounded-full text-[10px]">0</span>
-        </button>
-      <!-- Login / Account Button -->
-        <button
-        id="authButton"
-        onclick="openAuthModal()"
-        class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg shadow-sm transition"
-        >
-        <span>🔑</span>
-        <span id="authButtonText">Login</span>
-        </button>
-        <!-- 1-Click Share Buttons -->
-        <div class="flex items-center gap-2">
-
-        <!-- WhatsApp -->
-        <a
-          href="https://api.whatsapp.com/send?text=Check%20out%20this%20free%20UK%20IT%20Job%20Board%20with%20live%20tech%20roles%3A%20https%3A%2F%2Fvenubabu2620.github.io%2FUK-IT-JOBS%2F"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-semibold rounded-lg shadow-sm transition"
-        >
-          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
-          </svg>
-          <span class="hidden md:inline">Share</span>
-        </a>
-
-        <!-- LinkedIn -->
-        <a
-          href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fvenubabu2620.github.io%2FUK-IT-JOBS%2F"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#0A66C2] hover:bg-[#084e96] text-white text-xs font-semibold rounded-lg shadow-sm transition"
-        >
-          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-          </svg>
-          <span class="hidden md:inline">Post</span>
-        </a>
-
-        <!-- Copy Link -->
-        <button
-          onclick="copySiteLink()"
-          id="copyBtn"
-          class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold rounded-lg shadow-sm transition"
-        >
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-          </svg>
-          <span id="copyBtnText">Copy Link</span>
-        </button>
-
+          <!-- Saved Jobs and Contact on the second row; account/login retained -->
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="showSavedJobs()" class="inline-flex h-10 items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 text-sm font-semibold text-amber-700 transition hover:bg-amber-100" title="View saved jobs">
+              <span class="text-base" aria-hidden="true">♥</span><span>Saved Jobs</span><span id="savedCount" class="rounded-full bg-amber-200 px-2 py-0.5 text-xs text-amber-800">0</span>
+            </button>
+            <a href="./contact.html" class="inline-flex h-10 items-center gap-2 rounded-xl border border-emerald-600 px-4 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">✉ <span>Contact</span></a>
+            <button id="authButton" onclick="openAuthModal()" class="inline-flex h-10 items-center gap-2 rounded-xl bg-emerald-600 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700"><span aria-hidden="true">🔑</span><span id="authButtonText">Login</span></button>
+          </div>
         </div>
       </div>
     </div>
