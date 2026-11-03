@@ -661,6 +661,39 @@ const whatsappUrl =
       filterAndRender();
     }
 
+    function getCompanyLogoUrl(job) {
+      const company = String(job.company || '').trim();
+      const direct = job.company_logo || job.logo_url || job.company_logo_url || job.logo;
+      if (direct && /^https?:\/\//i.test(String(direct))) return String(direct);
+
+      const knownDomains = {
+        'searchability': 'searchability.com',
+        'arc it recruitment': 'arcitrecruitment.com',
+        'universal music holdings': 'universalmusic.com',
+        'universal music group': 'universalmusic.com',
+        'ocho': 'ocho.co.uk',
+        'organox': 'organox.com',
+        'barclays': 'barclays.co.uk',
+        'motorola solutions': 'motorolasolutions.com',
+        'harvey nash': 'harveynash.com',
+        'adaptable recruitment': 'adaptablerecruitment.com'
+      };
+      const key = company.toLowerCase();
+      let domain = knownDomains[key];
+      if (!domain) {
+        const website = job.company_website || job.website || job.company_url;
+        if (website) {
+          try { domain = new URL(/^https?:\/\//i.test(website) ? website : `https://${website}`).hostname; } catch (_) {}
+        }
+      }
+      if (!domain) {
+        // Best-effort domain guess for companies without a website field.
+        domain = key.replace(/\b(ltd|limited|plc|inc|llc|group|holdings)\b/g, '')
+          .replace(/[^a-z0-9]+/g, '').trim() + '.com';
+      }
+      return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=128`;
+    }
+
     function renderJobs(jobs) {
       const container = document.getElementById('jobList');
       const countEl = document.getElementById('resultsCount');
@@ -674,13 +707,9 @@ const whatsappUrl =
       container.innerHTML = jobs.map(job => {
         const title = job.title || 'Untitled role';
         const company = job.company || 'Unknown company';
+        const companyLogo = getCompanyLogoUrl(job);
         const location = job.location || 'United Kingdom';
         const description = job.job_description || 'No description available.';
-        const salary = job.salary_min && job.salary_max
-          ? `£${Number(job.salary_min).toLocaleString()} – £${Number(job.salary_max).toLocaleString()}`
-          : job.salary_max ? `Up to £${Number(job.salary_max).toLocaleString()}`
-          : job.salary_min ? `From £${Number(job.salary_min).toLocaleString()}`
-          : 'Salary not disclosed';
         const searchableDetails = `${title} ${location} ${description} ${job.job_type || ''} ${job.work_type || ''}`.toLowerCase();
         const workArrangement = /remote|work from home|work-from-home|fully distributed/.test(searchableDetails) ? 'Remote'
           : /hybrid/.test(searchableDetails) ? 'Hybrid'
@@ -706,7 +735,9 @@ const whatsappUrl =
             <div class="h-1.5 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500"></div>
             <div class="flex flex-1 flex-col p-5">
               <div class="mb-4 flex items-start gap-3">
-                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-slate-100 bg-slate-50 text-lg font-extrabold text-emerald-700">${escapeHtml(company.slice(0, 1).toUpperCase())}</div>
+                <div class="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-slate-100 bg-white p-1.5">
+                  <img src="${escapeHtml(companyLogo)}" alt="${escapeHtml(company)} logo" loading="lazy" class="h-full w-full object-contain" onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Crect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23f1f5f9%22/%3E%3Cpath d=%22M18 50V18h28v32M12 50h40M25 26h4m6 0h4m-14 8h4m6 0h4m-14 8h4m6 0h4%22 stroke=%22%2394a3b8%22 stroke-width=%223%22 fill=%22none%22 stroke-linecap=%22round%22/%3E%3C/svg%3E';">
+                </div>
                 <div class="min-w-0 flex-1">
                   <h3 class="break-words whitespace-normal text-base font-bold leading-6 text-slate-900">${escapeHtml(title)}</h3>
                   <p class="mt-1 text-sm font-semibold text-emerald-700">${escapeHtml(company)}</p>
@@ -717,11 +748,6 @@ const whatsappUrl =
                 <span class="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1.5 text-slate-600">📍 ${escapeHtml(location)}</span>
                 ${workArrangement ? `<span class="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1.5 font-medium text-emerald-700">🏠 ${workArrangement}</span>` : ''}
                 ${job.job_type ? `<span class="inline-flex items-center gap-1 rounded-full bg-indigo-50 px-2.5 py-1.5 text-indigo-700">💼 ${escapeHtml(job.job_type)}</span>` : ''}
-              </div>
-
-              <div class="mb-4 rounded-xl border border-emerald-100 bg-emerald-50/70 px-3.5 py-3">
-                <p class="mb-0.5 text-[11px] font-semibold uppercase tracking-wide text-emerald-700">Salary</p>
-                <p class="text-sm font-bold text-slate-800">💷 ${escapeHtml(salary)}</p>
               </div>
 
               ${tags.length ? `<div class="mb-4 flex flex-wrap gap-1.5">${tags.map(tag => `<span class="rounded-full border border-blue-100 bg-blue-50 px-2.5 py-1 text-[11px] font-medium text-blue-700">${escapeHtml(tag)}</span>`).join('')}</div>` : ''}
