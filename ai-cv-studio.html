@@ -64,6 +64,13 @@ function renderResults(a, action = 'analyse'){
     }</section>`;
 
   const panel=(title,content)=>`<section><h3 class="mb-2 font-bold">${title}</h3>${content}</section>`;
+  const scoreComparison=()=>{
+    const before=Number(a.original_ats_score), after=Number(a.new_ats_score), change=Number(a.score_change);
+    if(!Number.isFinite(before)||!Number.isFinite(after)) return `<p class="rounded-xl bg-amber-50 p-3 text-sm text-amber-800">The CV was created, but the before-and-after ATS scores were not returned. Please redeploy the updated cv-analyser function.</p>`;
+    const delta=Number.isFinite(change)?change:after-before;
+    const label=delta>0?`+${delta} points`:delta<0?`${delta} points`:'No change';
+    return `<section class="rounded-2xl border border-emerald-200 bg-emerald-50 p-4"><h3 class="font-bold text-emerald-900">ATS score comparison</h3><div class="mt-3 grid grid-cols-2 gap-3"><div class="rounded-xl bg-white p-3"><p class="text-xs text-slate-500">Original CV</p><p class="mt-1 text-3xl font-extrabold text-slate-800">${before}<span class="text-sm">/100</span></p></div><div class="rounded-xl bg-white p-3"><p class="text-xs text-slate-500">Updated CV</p><p class="mt-1 text-3xl font-extrabold text-emerald-700">${after}<span class="text-sm">/100</span></p></div></div><p class="mt-3 text-sm font-bold ${delta>=0?'text-emerald-800':'text-amber-800'}">${label} compared with your original CV</p><p class="mt-1 text-xs text-slate-600">Both versions were assessed against the same job description using the same scoring rubric. ATS scores are estimates, not guarantees.</p></section>`;
+  };
   const downloadButton=(label,filename,value)=>`
     <button id="downloadCv" class="mt-3 w-full rounded-xl bg-emerald-700 px-4 py-3 text-sm font-bold text-white">${label}</button>`;
 
@@ -73,6 +80,7 @@ function renderResults(a, action = 'analyse'){
     if(!a.optimised_cv){
       html=`<p class="rounded-xl bg-amber-50 p-4 text-sm text-amber-800">The function did not return an optimised CV. Please check that the latest cv-analyser Edge Function is deployed and returns the <code>optimised_cv</code> field.</p>`;
     }else{
+      html+=scoreComparison();
       html+=`<div class="rounded-2xl bg-emerald-50 p-4"><h3 class="font-bold text-emerald-800">Your optimised CV is ready</h3><p class="mt-1 text-sm text-slate-700">${escapeHtml(a.summary||'Your CV has been tailored to the job description. Please review all details for accuracy.')}</p></div>`;
       html+=`<pre class="whitespace-pre-wrap rounded-xl bg-slate-50 p-4 text-sm">${escapeHtml(a.optimised_cv)}</pre>`;
       html+=downloadButton('Download optimised CV (.txt)','optimised-cv.txt',a.optimised_cv);
@@ -88,6 +96,7 @@ function renderResults(a, action = 'analyse'){
     if(!a.generated_cv){
       html=`<p class="rounded-xl bg-amber-50 p-4 text-sm text-amber-800">The function did not return a generated CV. Please check that the latest cv-analyser Edge Function is deployed and returns the <code>generated_cv</code> field.</p>`;
     }else{
+      html+=scoreComparison();
       html+=`<div class="rounded-2xl bg-emerald-50 p-4"><h3 class="font-bold text-emerald-800">Your ATS-friendly CV is ready</h3><p class="mt-1 text-sm text-slate-700">${escapeHtml(a.summary||'Review the CV carefully and confirm that all details are accurate.')}</p></div>`;
       html+=`<pre class="whitespace-pre-wrap rounded-xl bg-slate-50 p-4 text-sm">${escapeHtml(a.generated_cv)}</pre>`;
       html+=downloadButton('Download generated CV (.txt)','generated-cv.txt',a.generated_cv);
