@@ -35,7 +35,6 @@
   <!-- Tailwind & Supabase Scripts -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
   /* London skyline login background */
   #loginPage {
@@ -66,8 +65,7 @@
       background-position: 57% center;
     }
   }
-
-  /* Mobile responsive layout */
+    /* Mobile responsive layout */
   *,
   *::before,
   *::after {
@@ -135,7 +133,6 @@
     }
   }
 </style>
-
   <!-- Counter.dev Analytics -->
   <script
     src="https://cdn.counter.dev/script.js"
@@ -162,10 +159,10 @@
 
   <div id="appContent" class="hidden">
 
+
   <!-- Sticky responsive header -->
   <header class="sticky top-0 z-40 border-b border-slate-200 bg-white/95 shadow-sm backdrop-blur">
     <div class="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
-
       <!-- Logo always returns to the job homepage -->
       <a href="./index.html" aria-label="UK IT Jobs homepage" class="shrink-0 text-xl font-extrabold tracking-tight text-slate-900">
         UK<span class="text-emerald-600">IT</span> Jobs
@@ -173,7 +170,6 @@
 
       <!-- Desktop navigation -->
       <nav aria-label="Main navigation" class="hidden items-center gap-1 lg:flex">
-
         <a href="./ai-cv-studio.html" class="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-emerald-700">✨ AI CV Studio</a>
 
         <button type="button" onclick="showSavedJobs()" class="inline-flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-emerald-50 hover:text-emerald-700" title="View saved jobs">
@@ -222,14 +218,10 @@
     <!-- Mobile navigation drawer -->
     <div id="mobileNavigation" class="hidden border-t border-slate-100 bg-white px-4 pb-5 pt-3 shadow-lg lg:hidden">
       <div class="mx-auto flex max-w-6xl flex-col gap-1">
-
         <a href="./ai-cv-studio.html" class="rounded-xl bg-emerald-50 px-4 py-3 text-sm font-bold text-emerald-800">✨ AI CV Studio</a>
-
         <button type="button" onclick="showSavedJobs(); closeMobileMenu();" class="flex w-full items-center justify-between rounded-xl px-4 py-3 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50">
-          <span>♥ Saved Jobs</span>
-          <span id="mobileSavedCount" class="rounded-full bg-amber-100 px-2 py-0.5 text-xs text-amber-800">0</span>
+          <span>♥ Saved Jobs</span><span id="mobileSavedCount" class="rounded-full bg-amber-100 px-2 py-0.5 text-xs text-amber-800">0</span>
         </button>
-
         <a href="./contact.html" class="rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50">Contact</a>
 
         <details class="rounded-xl">
@@ -251,9 +243,7 @@
         </details>
 
         <details class="rounded-xl">
-          <summary class="cursor-pointer list-none rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50">
-            <span id="mobileAuthButtonText">Account</span> <span class="float-right">▾</span>
-          </summary>
+          <summary class="cursor-pointer list-none rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50"><span id="mobileAuthButtonText">Account</span> <span class="float-right">▾</span></summary>
           <div class="space-y-1 px-3 pb-2">
             <p id="mobileAccountEmailLabel" class="truncate px-3 py-2 text-xs text-slate-500">Signed in</p>
             <button type="button" onclick="signOutUser()" class="block w-full rounded-lg px-3 py-2 text-left text-sm font-semibold text-red-600 hover:bg-red-50">Sign out</button>
@@ -262,11 +252,11 @@
       </div>
     </div>
   </header>
-
   <!-- Main Content -->
   <main class="max-w-6xl mx-auto px-4 py-8 flex-grow w-full">
 
     <div class="text-center max-w-2xl mx-auto mb-8">
+
       <h2 class="text-3xl font-extrabold text-slate-900 mb-2">
         UK IT & Tech Opportunities
       </h2>
@@ -386,7 +376,129 @@
 
   </main>
 
-          const saved = getSavedJobs().filter(job => job.key !== key);
+  <!-- Footer -->
+  <footer class="border-t border-slate-200 bg-white">
+    <div class="mx-auto grid max-w-6xl grid-cols-1 gap-8 px-4 py-8 sm:grid-cols-2 md:grid-cols-4">
+      <div class="sm:col-span-2">
+        <a href="/UK-IT-JOBS/" class="text-lg font-extrabold tracking-tight text-slate-900">UK<span class="text-emerald-600">IT</span> Jobs</a>
+        <p class="mt-2 max-w-md text-sm leading-6 text-slate-500">Discover technology opportunities across the UK. Always check the employer's official listing for the latest details.</p>
+      </div>
+      <div>
+        <h2 class="text-sm font-bold text-slate-800">Information</h2>
+        <ul class="mt-3 space-y-2 text-sm text-slate-500">
+          <li><a class="hover:text-emerald-700" href="./privacy-policy.html">Privacy Policy</a></li>
+          <li><a class="hover:text-emerald-700" href="./terms-and-conditions.html">Terms &amp; Conditions</a></li>
+          <li><a class="hover:text-emerald-700" href="./cookies-policy.html">Cookies Policy</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="text-sm font-bold text-slate-800">Get in touch</h2>
+        <ul class="mt-3 space-y-2 text-sm text-slate-500">
+          <li><a class="hover:text-emerald-700" href="./contact.html">Contact Us</a></li>
+          <li><a class="hover:text-emerald-700" href="mailto:support.ukitjobs@gmail.com">Email us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t border-slate-100 px-4 py-4 text-center text-xs text-slate-400">© <span class="current-year">2026</span> UK IT Jobs. All rights reserved.</div>
+  </footer>
+  <script>document.querySelectorAll('.current-year').forEach(el => el.textContent = new Date().getFullYear());</script>
+
+  </div>
+
+  <script>
+    const SUPABASE_URL = "https://mjmbpjulosdywzperdhe.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_voOWFppdSdr1LJPcelmGSQ_74FqLmKK";
+
+    const supabaseClient = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY
+    );
+
+    let allJobs = [];
+    let activeFilter = 'all';
+
+    const SAVED_JOBS_KEY = 'uk_it_jobs_saved_jobs';
+
+    function getSavedJobs() {
+      try {
+        return JSON.parse(localStorage.getItem(SAVED_JOBS_KEY) || '[]');
+      } catch (error) {
+        console.error('Unable to read saved jobs:', error);
+        return [];
+      }
+    }
+
+    function saveSavedJobs(jobs) {
+      localStorage.setItem(SAVED_JOBS_KEY, JSON.stringify(jobs));
+      updateSavedCount();
+    }
+
+    function jobKey(job) {
+      return job.apply_url || job.id || `${job.title || ''}|${job.company || ''}|${job.location || ''}`;
+    }
+
+    function isJobSaved(job) {
+      const key = jobKey(job);
+      return getSavedJobs().some(saved => saved.key === key);
+    }
+
+    function toggleSaveJob(event, applyUrl) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const job = allJobs.find(item => (item.apply_url || '') === applyUrl);
+      if (!job) return;
+
+      const key = jobKey(job);
+      const saved = getSavedJobs();
+      const existingIndex = saved.findIndex(item => item.key === key);
+
+      if (existingIndex >= 0) {
+        saved.splice(existingIndex, 1);
+      } else {
+        saved.unshift({
+          key,
+          id: job.id || null,
+          title: job.title || 'Untitled role',
+          company: job.company || 'Unknown company',
+          location: job.location || 'United Kingdom',
+          job_description: job.job_description || '',
+          apply_url: job.apply_url || '#',
+          created_at: job.created_at || null
+        });
+      }
+
+      saveSavedJobs(saved);
+      filterAndRender();
+
+      if (!document.getElementById('savedJobsPanel').classList.contains('hidden')) {
+        renderSavedJobs();
+      }
+    }
+
+    function updateSavedCount() {
+      document.getElementById('savedCount').innerText = getSavedJobs().length;
+      const mobileCount = document.getElementById('mobileSavedCount');
+      if (mobileCount) mobileCount.innerText = getSavedJobs().length;
+    }
+
+    function showSavedJobs() {
+      document.getElementById('savedJobsPanel').classList.remove('hidden');
+      document.getElementById('jobList').classList.add('hidden');
+      document.getElementById('savedJobsPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      renderSavedJobs();
+    }
+
+    function hideSavedJobs() {
+      document.getElementById('savedJobsPanel').classList.add('hidden');
+      document.getElementById('jobList').classList.remove('hidden');
+    }
+
+    function removeSavedJob(event, key) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const saved = getSavedJobs().filter(job => job.key !== key);
       saveSavedJobs(saved);
       renderSavedJobs();
       filterAndRender();
@@ -413,19 +525,20 @@
       container.innerHTML = saved.map(job => `
         <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm flex flex-col justify-between">
           <div>
-            <div class="flex items-start gap-3 mb-2">
-              <div class="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-slate-100 bg-slate-50 text-base font-extrabold text-emerald-700">
-                <span>${escapeHtml((job.company || 'U').slice(0, 1).toUpperCase())}</span>
-                ${job.company_logo ? `<img src="${escapeHtml(job.company_logo)}" alt="${escapeHtml(job.company || 'Company')} logo" class="h-full w-full object-contain bg-white" onerror="this.remove()" />` : ''}
-              </div>
-              <div class="min-w-0 flex-1"><h3 class="font-semibold text-slate-900 line-clamp-2">${escapeHtml(job.title)}</h3>
-              <p class="text-xs font-medium text-emerald-600 mt-1">${escapeHtml(job.company)}</p></div>
+            <div class="flex items-start justify-between gap-2 mb-2">
+              <h3 class="font-semibold text-slate-900 line-clamp-2">
+                ${escapeHtml(job.title)}
+              </h3>
               <button
                 onclick="removeSavedJob(event, '${escapeJs(job.key)}')"
                 class="text-amber-600 hover:text-red-600 text-lg shrink-0"
                 title="Remove saved job"
               >♥</button>
             </div>
+
+            <p class="text-xs font-medium text-emerald-600 mb-1">
+              ${escapeHtml(job.company)}
+            </p>
 
             <p class="text-xs text-slate-400 mb-3">
               📍 ${escapeHtml(job.location)}
@@ -473,20 +586,18 @@
         .replace(/\n/g, '\\n')
         .replace(/\r/g, '\\r');
     }
-
 function shareJob(job) {
   const title = job.title || 'UK IT Job';
   const company = job.company || '';
   const location = job.location || '';
-  const siteUrl = window.location.origin + window.location.pathname;
-  const applyUrl = job.apply_url || '';
-  const shareUrl = `${siteUrl}?job=${encodeURIComponent(job.title || '')}`;
-
-  const shareText =
-    `${title}${company ? ` at ${company}` : ''}${location ? ` — ${location}` : ''}\n\n` +
-    `View this job on UK IT Jobs:\n${shareUrl}\n\n` +
-    `Apply here:\n${applyUrl}`;
-
+const siteUrl = window.location.origin + window.location.pathname;
+const applyUrl = job.apply_url || '';
+const shareUrl =
+  `${siteUrl}?job=${encodeURIComponent(job.title || '')}`;
+const shareText =
+  `${title}${company ? ` at ${company}` : ''}${location ? ` — ${location}` : ''}\n\n` +
+  `View this job on UK IT Jobs:\n${shareUrl}\n\n` +
+  `Apply here:\n${applyUrl}`;
   if (navigator.share) {
     navigator.share({
       title: title,
@@ -496,12 +607,10 @@ function shareJob(job) {
     return;
   }
 
-  const whatsappUrl =
-    `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
-
+const whatsappUrl =
+  `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
   window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
 }
-
     async function fetchJobs() {
       const { data, error } = await supabaseClient
         .from('jobs')
@@ -539,22 +648,17 @@ function shareJob(job) {
         const company = job.company || 'Unknown company';
         const location = job.location || 'United Kingdom';
         const description = job.job_description || 'No description available.';
-
         const salary = job.salary_min && job.salary_max
           ? `£${Number(job.salary_min).toLocaleString()} – £${Number(job.salary_max).toLocaleString()}`
           : job.salary_max ? `Up to £${Number(job.salary_max).toLocaleString()}`
           : job.salary_min ? `From £${Number(job.salary_min).toLocaleString()}`
           : 'Salary not disclosed';
-
         const searchableDetails = `${title} ${location} ${description} ${job.job_type || ''} ${job.work_type || ''}`.toLowerCase();
-
         const workArrangement = /remote|work from home|work-from-home|fully distributed/.test(searchableDetails) ? 'Remote'
           : /hybrid/.test(searchableDetails) ? 'Hybrid'
           : /on[- ]site|onsite|office based|office-based/.test(searchableDetails) ? 'On-site' : '';
-
         const tags = [];
         const tagText = `${title} ${description}`.toLowerCase();
-
         [
           ['JavaScript', /javascript|typescript|node\.?js/],
           ['Python', /python/],
@@ -563,9 +667,7 @@ function shareJob(job) {
           ['Data', /data analyst|data engineer|data scientist|analytics|power bi|sql/],
           ['Cyber Security', /cyber security|cybersecurity|soc analyst|penetration test/],
           ['DevOps', /devops|kubernetes|terraform|ci\/cd/]
-        ].forEach(([label, pattern]) => {
-          if (pattern.test(tagText) && tags.length < 4) tags.push(label);
-        });
+        ].forEach(([label, pattern]) => { if (pattern.test(tagText) && tags.length < 4) tags.push(label); });
 
         const saved = isJobSaved(job);
         const applyUrl = job.apply_url || '#';
@@ -576,14 +678,7 @@ function shareJob(job) {
             <div class="h-1.5 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500"></div>
             <div class="flex flex-1 flex-col p-5">
               <div class="mb-4 flex items-start gap-3">
-                <div class="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-slate-100 bg-slate-50 text-lg font-extrabold text-emerald-700">
-                  <span class="company-logo-fallback">${escapeHtml(company.slice(0, 1).toUpperCase())}</span>
-                  ${(() => {
-                    const logo = job.company_logo || job.company_logo_url || job.logo_url || job.logo || job.employer_logo || job.companyLogo || '';
-                    return logo ? `<img src="${escapeHtml(logo)}" alt="${escapeHtml(company)} logo" loading="lazy" class="absolute inset-0 h-full w-full bg-white object-contain p-1" onerror="this.remove()" />` : '';
-                  })()}
-                </div>
-
+                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-slate-100 bg-slate-50 text-lg font-extrabold text-emerald-700">${escapeHtml(company.slice(0, 1).toUpperCase())}</div>
                 <div class="min-w-0 flex-1">
                   <h3 class="break-words whitespace-normal text-base font-bold leading-6 text-slate-900">${escapeHtml(title)}</h3>
                   <p class="mt-1 text-sm font-semibold text-emerald-700">${escapeHtml(company)}</p>
@@ -604,14 +699,10 @@ function shareJob(job) {
               ${tags.length ? `<div class="mb-4 flex flex-wrap gap-1.5">${tags.map(tag => `<span class="rounded-full border border-blue-100 bg-blue-50 px-2.5 py-1 text-[11px] font-medium text-blue-700">${escapeHtml(tag)}</span>`).join('')}</div>` : ''}
 
               <div class="mt-auto border-t border-slate-100 pt-4">
-                <p class="mb-4 text-xs leading-relaxed text-slate-600 line-clamp-3">${escapeHtml(description)}</p>
-
-                <div class="flex gap-2">
-                  <a href="${escapeHtml(applyUrl)}" target="_blank" rel="noopener noreferrer" class="flex-1 rounded-lg bg-emerald-600 py-2.5 text-center text-xs font-bold text-white transition hover:bg-emerald-700">Apply Now →</a>
-
-                  <button onclick="toggleSaveJob('${escapeJs(job.id)}')" class="rounded-lg border border-slate-200 px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-amber-50" title="Save job">${saved ? '♥ Saved' : '♡ Save'}</button>
-
-                  <button onclick="shareJob(${JSON.stringify(job).replace(/"/g, '&quot;')})" class="rounded-lg border border-slate-200 px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50" title="Share job">↗</button>
+                <a href="${escapeHtml(applyUrl)}" target="_blank" rel="noopener noreferrer" class="block w-full rounded-xl bg-emerald-600 px-4 py-3 text-center text-sm font-bold text-white shadow-sm transition hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">Apply Now <span aria-hidden="true">→</span></a>
+                <div class="mt-2 flex items-center justify-between gap-2">
+                  <button type="button" onclick="toggleSaveJob(event, '${escapeJs(saveUrl)}')" class="rounded-lg px-3 py-2 text-xs font-semibold ${saved ? 'text-amber-700' : 'text-slate-500 hover:bg-amber-50 hover:text-amber-700'}">${saved ? '♥ Saved job' : '♡ Save job'}</button>
+                  <button type="button" onclick='shareJob(${JSON.stringify(job).replace(/'/g, "&#39;")})' class="rounded-lg px-3 py-2 text-xs font-semibold text-slate-500 hover:bg-blue-50 hover:text-blue-700">↗ Share</button>
                 </div>
               </div>
             </div>
@@ -626,6 +717,7 @@ function shareJob(job) {
           .trim();
 
       let filtered = allJobs.filter(job => {
+
         const text =
           `${job.title || ''} ${job.company || ''} ${job.location || ''} ${job.job_description || ''}`
           .toLowerCase();
@@ -689,12 +781,26 @@ function shareJob(job) {
       activeFilter = filterType;
 
       document.querySelectorAll('.filter-chip').forEach(btn => {
-        btn.classList.remove('bg-slate-900', 'text-white');
-        btn.classList.add('bg-white', 'text-slate-700');
+        btn.classList.remove(
+          'bg-slate-900',
+          'text-white'
+        );
+
+        btn.classList.add(
+          'bg-white',
+          'text-slate-700'
+        );
       });
 
-      event.target.classList.add('bg-slate-900', 'text-white');
-      event.target.classList.remove('bg-white', 'text-slate-700');
+      event.target.classList.add(
+        'bg-slate-900',
+        'text-white'
+      );
+
+      event.target.classList.remove(
+        'bg-white',
+        'text-slate-700'
+      );
 
       filterAndRender();
     }
@@ -710,7 +816,6 @@ function shareJob(job) {
 
     async function copySiteLink() {
       const siteUrl = "https://venubabu2620.github.io/UK-IT-JOBS/";
-
       try {
         if (navigator.clipboard && window.isSecureContext) {
           await navigator.clipboard.writeText(siteUrl);
@@ -724,70 +829,21 @@ function shareJob(job) {
           document.execCommand('copy');
           temporaryInput.remove();
         }
-
         const copyButtons = document.querySelectorAll('.copy-link-feedback');
-
         copyButtons.forEach(button => {
           const original = button.textContent;
           button.textContent = 'Copied! ✓';
           setTimeout(() => button.textContent = original, 2000);
         });
-
       } catch (error) {
         console.error('Could not copy website link:', error);
         alert('Unable to copy the link. Please copy it from the address bar.');
       }
     }
-
-    // Keep only one navigation dropdown open at a time (desktop and mobile).
-    function initialiseExclusiveDropdowns() {
-      const groups = [
-        document.querySelector('nav[aria-label="Main navigation"]'),
-        document.getElementById('mobileNavigation')
-      ].filter(Boolean);
-
-      groups.forEach(group => {
-        const menus = Array.from(group.querySelectorAll('details'));
-
-        menus.forEach(menu => {
-          menu.addEventListener('toggle', () => {
-            if (!menu.open) return;
-
-            menus.forEach(other => {
-              if (other !== menu && other.open) other.open = false;
-            });
-          });
-        });
-      });
-
-      document.addEventListener('click', event => {
-        groups.forEach(group => {
-          if (!group.contains(event.target)) {
-            group.querySelectorAll('details[open]').forEach(menu => {
-              menu.open = false;
-            });
-          }
-        });
-      });
-
-      document.addEventListener('keydown', event => {
-        if (event.key === 'Escape') {
-          groups.forEach(group => {
-            group.querySelectorAll('details[open]').forEach(menu => {
-              menu.open = false;
-            });
-          });
-        }
-      });
-    }
-
-    initialiseExclusiveDropdowns();
-
-    // ===== Google-only authentication =====
+// ===== Google-only authentication =====
     function showAuthMessage(message, isError = false) {
       const element = document.getElementById('loginPageMessage');
       if (!element) return;
-
       element.textContent = message;
       element.className = `mt-4 text-center text-sm ${isError ? 'text-red-600' : 'text-emerald-700'}`;
     }
@@ -795,7 +851,6 @@ function shareJob(job) {
     async function signInWithGoogle() {
       const button = document.getElementById('googleLoginButton');
       const buttonText = document.getElementById('googleLoginButtonText');
-
       button.disabled = true;
       buttonText.textContent = 'Connecting to Google...';
       showAuthMessage('Redirecting to Google sign-in...');
@@ -807,9 +862,7 @@ function shareJob(job) {
             redirectTo: window.location.origin + window.location.pathname
           }
         });
-
         if (error) throw error;
-
       } catch (error) {
         showAuthMessage(error.message || 'Google sign-in failed. Please try again.', true);
         button.disabled = false;
@@ -820,63 +873,49 @@ function shareJob(job) {
     function updateAuthUI(user) {
       const loginPage = document.getElementById('loginPage');
       const appContent = document.getElementById('appContent');
+      const button = document.getElementById('authButton');
       const text = document.getElementById('authButtonText');
 
       if (user) {
         loginPage.classList.add('hidden');
         appContent.classList.remove('hidden');
-
         const displayName = user.email ? user.email.split('@')[0] : 'Account';
-
         if (text) text.textContent = displayName;
-
         const mobileText = document.getElementById('mobileAuthButtonText');
         if (mobileText) mobileText.textContent = displayName;
-
         const emailLabel = document.getElementById('accountEmailLabel');
         if (emailLabel) emailLabel.textContent = user.email || 'Signed in';
-
         const mobileEmailLabel = document.getElementById('mobileAccountEmailLabel');
         if (mobileEmailLabel) mobileEmailLabel.textContent = user.email || 'Signed in';
-
         updateSavedCount();
         fetchJobs();
-
       } else {
         appContent.classList.add('hidden');
         loginPage.classList.remove('hidden');
-
         if (text) text.textContent = 'Account';
-
         const mobileText = document.getElementById('mobileAuthButtonText');
         if (mobileText) mobileText.textContent = 'Account';
-
         allJobs = [];
       }
     }
 
     async function signOutUser() {
       const { error } = await supabaseClient.auth.signOut();
-
       if (error) {
         alert('Could not sign out: ' + error.message);
         return;
       }
-
       updateAuthUI(null);
     }
 
     async function initialiseAuth() {
       const { data, error } = await supabaseClient.auth.getSession();
-
       if (error) console.error('Could not retrieve session:', error);
-
       updateAuthUI(data?.session?.user || null);
 
       supabaseClient.auth.onAuthStateChange((event, session) => {
         updateAuthUI(session?.user || null);
       });
-
       // Refresh the UI when the same Supabase session changes in another tab/page.
       window.addEventListener('storage', (event) => {
         if (event.key && event.key.includes('auth-token')) initialiseAuth();
@@ -887,9 +926,7 @@ function shareJob(job) {
     function closeMobileMenu() {
       const menu = document.getElementById('mobileNavigation');
       const toggle = document.getElementById('mobileMenuButton');
-
       if (menu) menu.classList.add('hidden');
-
       if (toggle) {
         toggle.setAttribute('aria-expanded', 'false');
         toggle.setAttribute('aria-label', 'Open navigation menu');
@@ -901,7 +938,6 @@ function shareJob(job) {
       const menu = document.getElementById('mobileNavigation');
       const toggle = document.getElementById('mobileMenuButton');
       const willOpen = menu.classList.contains('hidden');
-
       menu.classList.toggle('hidden', !willOpen);
       toggle.setAttribute('aria-expanded', String(willOpen));
       toggle.setAttribute('aria-label', willOpen ? 'Close navigation menu' : 'Open navigation menu');
@@ -911,7 +947,6 @@ function shareJob(job) {
     document.addEventListener('click', (event) => {
       const menu = document.getElementById('mobileNavigation');
       const toggle = document.getElementById('mobileMenuButton');
-
       if (menu && toggle && !menu.contains(event.target) && !toggle.contains(event.target)) {
         closeMobileMenu();
       }
@@ -922,6 +957,7 @@ function shareJob(job) {
     });
 
     initialiseAuth();
+
     updateSavedCount();
   </script>
 
