@@ -132,24 +132,6 @@
       max-width: 100%;
     }
   }
-
-  /* Mobile navigation: keep the header compact and move actions into a menu */
-  #mobileMenuOverlay { display: none; }
-  @media (max-width: 767px) {
-    .desktop-header-actions { display: none !important; }
-    .mobile-menu-button { display: inline-flex !important; }
-    header > div { padding-top: 12px; padding-bottom: 12px; }
-    .mobile-brand-title { font-size: 1.55rem !important; line-height: 1.1; }
-    .mobile-brand-subtitle { font-size: .72rem !important; line-height: 1.25; }
-    .mobile-flag { font-size: 2rem !important; }
-    #mobileMenuOverlay.is-open { display: block; }
-    #mobileMenuPanel { transform: translateX(100%); transition: transform .22s ease; }
-    #mobileMenuOverlay.is-open #mobileMenuPanel { transform: translateX(0); }
-    body.mobile-menu-open { overflow: hidden; }
-  }
-  @media (min-width: 768px) {
-    .mobile-menu-button, #mobileMenuOverlay { display: none !important; }
-  }
 </style>
   <!-- Counter.dev Analytics -->
   <script
@@ -178,96 +160,99 @@
   <div id="appContent" class="hidden">
 
 
-  <!-- Sticky Header: large brand left, share/legal right, account actions below -->
-  <header class="bg-white sticky top-0 z-20 shadow-sm">
-    <div class="w-full max-w-6xl mx-auto px-4 py-4">
-      <div class="flex items-center justify-between gap-3 lg:items-start">
-        <!-- Brand -->
-        <div class="flex items-center gap-3 min-w-0">
-          <a href="/UK-IT-JOBS/" aria-label="UK IT Jobs homepage" class="flex items-center gap-3 rounded hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-            <span class="text-4xl sm:text-5xl leading-none mobile-flag" aria-hidden="true">🇬🇧</span>
-            <span class="block min-w-0">
-              <span class="block text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 mobile-brand-title">UK <span class="text-emerald-600">IT</span> Jobs</span>
-              <span class="block mt-1 text-sm sm:text-base font-medium text-slate-500 mobile-brand-subtitle">Daily UK Tech &amp; IT Opportunities</span>
-            </span>
-          </a>
-        </div>
+  <!-- Sticky Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-20 shadow-sm">
+  <div class="max-w-6xl mx-auto px-4 py-3.5 flex flex-wrap items-center justify-between gap-3">
 
-        <!-- Mobile hamburger opens the navigation drawer -->
-        <button type="button" class="mobile-menu-button hidden shrink-0 h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-800 shadow-sm hover:bg-slate-50" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobileMenuOverlay" onclick="toggleMobileMenu(true)">
-          <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      <div class="flex items-center gap-3">
+        <h1 class="text-xl font-bold tracking-tight text-slate-800">
+          UK<span class="text-emerald-600">IT</span> Jobs
+        </h1>
+
+        <span class="hidden sm:inline-block text-xs bg-emerald-100 text-emerald-800 font-semibold px-2.5 py-1 rounded-full">
+          🇬🇧 High-Volume Tech Board
+        </span>
+      </div>
+
+      <!-- Header quick links: Legal dropdown and Contact -->
+      <div class="flex items-center gap-2">
+        <details class="relative group">
+          <summary class="list-none cursor-pointer inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 hover:border-emerald-500 hover:text-emerald-700">
+            Legal <span aria-hidden="true">▾</span>
+          </summary>
+          <div class="absolute left-0 sm:left-auto sm:right-0 mt-2 w-52 max-w-[calc(100vw-2rem)] rounded-xl border border-slate-200 bg-white p-2 shadow-xl z-50">
+            <a class="block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-700" href="./privacy-policy.html">Privacy Policy</a>
+            <a class="block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-700" href="./terms-and-conditions.html">Terms &amp; Conditions</a>
+            <a class="block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-700" href="./cookies-policy.html">Cookies Policy</a>
+          </div>
+        </details>
+        <a href="./ai-cv-studio.html" class="inline-flex items-center gap-1 rounded-lg bg-emerald-600 px-3 py-2 text-xs font-semibold text-white hover:bg-emerald-700">✨ <span>AI CV Studio</span></a>
+        <a href="./contact.html" class="inline-flex items-center gap-1 rounded-lg border border-emerald-600 px-3 py-2 text-xs font-semibold text-emerald-700 hover:bg-emerald-50">✉ <span>Contact</span></a>
+
+        <!-- Saved Jobs -->
+        <button
+          onclick="showSavedJobs()"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 text-xs font-semibold rounded-lg border border-amber-200 transition"
+          title="View saved jobs"
+        >
+          <span class="text-sm">♥</span>
+          <span class="hidden sm:inline">Saved</span>
+          <span id="savedCount" class="bg-amber-200 text-amber-800 px-1.5 py-0.5 rounded-full text-[10px]">0</span>
+        </button>
+      <!-- Login / Account Button -->
+        <button
+        id="authButton"
+        onclick="openAuthModal()"
+        class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg shadow-sm transition"
+        >
+        <span>🔑</span>
+        <span id="authButtonText">Login</span>
+        </button>
+        <!-- 1-Click Share Buttons -->
+        <div class="flex items-center gap-2">
+
+        <!-- WhatsApp -->
+        <a
+          href="https://api.whatsapp.com/send?text=Check%20out%20this%20free%20UK%20IT%20Job%20Board%20with%20live%20tech%20roles%3A%20https%3A%2F%2Fvenubabu2620.github.io%2FUK-IT-JOBS%2F"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-semibold rounded-lg shadow-sm transition"
+        >
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
+          </svg>
+          <span class="hidden md:inline">Share</span>
+        </a>
+
+        <!-- LinkedIn -->
+        <a
+          href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fvenubabu2620.github.io%2FUK-IT-JOBS%2F"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#0A66C2] hover:bg-[#084e96] text-white text-xs font-semibold rounded-lg shadow-sm transition"
+        >
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+          </svg>
+          <span class="hidden md:inline">Post</span>
+        </a>
+
+        <!-- Copy Link -->
+        <button
+          onclick="copySiteLink()"
+          id="copyBtn"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold rounded-lg shadow-sm transition"
+        >
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+          </svg>
+          <span id="copyBtnText">Copy Link</span>
         </button>
 
-        <!-- Right-side actions (desktop) -->
-        <div class="desktop-header-actions flex flex-col items-start lg:items-end gap-3">
-          <!-- Social links and Legal in one line -->
-          <div class="flex flex-wrap items-center gap-2 sm:gap-3">
-            <a href="https://api.whatsapp.com/send?text=Check%20out%20this%20free%20UK%20IT%20Job%20Board%20with%20live%20tech%20roles%3A%20https%3A%2F%2Fvenubabu2620.github.io%2FUK-IT-JOBS%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on WhatsApp" title="Share on WhatsApp" class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#25D366] text-white shadow-sm hover:bg-[#20ba59]">
-              <svg class="h-6 w-6 fill-current" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.52 3.48A11.82 11.82 0 0 0 12.08 0C5.52 0 .18 5.34.18 11.9c0 2.1.55 4.15 1.6 5.96L.08 24l6.3-1.65a11.9 11.9 0 0 0 5.7 1.45h.01c6.56 0 11.9-5.34 11.9-11.9 0-3.18-1.24-6.17-3.47-8.42ZM12.09 21.8h-.01a9.9 9.9 0 0 1-5.04-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.87 9.87 0 0 1-1.52-5.27c0-5.46 4.45-9.9 9.91-9.9a9.84 9.84 0 0 1 7.01 2.9 9.84 9.84 0 0 1 2.9 7.01c0 5.46-4.45 9.89-9.91 9.89Zm5.43-7.41c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.87 1.22 3.07c.15.2 2.1 3.2 5.08 4.49.71.31 1.27.5 1.7.64.71.23 1.36.2 1.87.12.57-.08 1.76-.72 2.01-1.42.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35Z"/></svg>
-            </a>
-            <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fvenubabu2620.github.io%2FUK-IT-JOBS%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on LinkedIn" title="Share on LinkedIn" class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#0A66C2] text-white shadow-sm hover:bg-[#084e96]">
-              <svg class="h-5 w-5 fill-current" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-            </a>
-            <button onclick="copySiteLink()" id="copyBtn" class="inline-flex h-10 items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-800 shadow-sm hover:border-slate-300 hover:bg-slate-50" title="Copy website link">
-              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
-              <span id="copyBtnText">Copy Link</span>
-            </button>
-            <details class="relative group">
-              <summary class="list-none cursor-pointer inline-flex h-10 items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 hover:border-emerald-500 hover:text-emerald-700">Legal <span aria-hidden="true">▾</span></summary>
-              <div class="absolute right-0 mt-2 w-52 max-w-[calc(100vw-2rem)] rounded-xl border border-slate-200 bg-white p-2 shadow-xl z-50">
-                <a class="block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-700" href="./privacy-policy.html">Privacy Policy</a>
-                <a class="block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-700" href="./terms-and-conditions.html">Terms &amp; Conditions</a>
-                <a class="block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-700" href="./cookies-policy.html">Cookies Policy</a>
-              </div>
-            </details>
-          </div>
-
-          <!-- Saved Jobs and Contact on the second row; account/login retained -->
-          <div class="flex flex-wrap items-center gap-2">
-            <button onclick="showSavedJobs()" class="inline-flex h-10 items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 text-sm font-semibold text-amber-700 transition hover:bg-amber-100" title="View saved jobs">
-              <span class="text-base" aria-hidden="true">♥</span><span>Saved Jobs</span><span id="savedCount" class="rounded-full bg-amber-200 px-2 py-0.5 text-xs text-amber-800">0</span>
-            </button>
-            <a href="./contact.html" class="inline-flex h-10 items-center gap-2 rounded-xl border border-emerald-600 px-4 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">✉ <span>Contact</span></a>
-            <button id="authButton" onclick="openAuthModal()" class="inline-flex h-10 items-center gap-2 rounded-xl bg-emerald-600 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700"><span aria-hidden="true">🔑</span><span id="authButtonText">Login</span></button>
-          </div>
         </div>
       </div>
     </div>
   </header>
-
-  <!-- Mobile slide-out navigation (Option 3) -->
-  <div id="mobileMenuOverlay" class="fixed inset-0 z-[60] bg-slate-900/40" onclick="if(event.target===this) toggleMobileMenu(false)" aria-hidden="true">
-    <nav id="mobileMenuPanel" class="absolute right-0 top-0 flex h-full w-[min(88vw,360px)] flex-col overflow-y-auto bg-white shadow-2xl" aria-label="Mobile navigation">
-      <div class="flex items-center justify-between border-b border-slate-100 px-5 py-4">
-        <span class="text-lg font-bold text-slate-900">Menu</span>
-        <button type="button" onclick="toggleMobileMenu(false)" class="flex h-10 w-10 items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100" aria-label="Close navigation menu">
-          <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-width="2" d="M6 6l12 12M18 6L6 18"/></svg>
-        </button>
-      </div>
-      <div class="space-y-1 p-4">
-        <a href="/UK-IT-JOBS/" class="flex items-center gap-3 rounded-xl bg-emerald-50 px-4 py-3 font-semibold text-slate-900"><span aria-hidden="true">⌂</span> Home</a>
-        <button type="button" onclick="showSavedJobs(); toggleMobileMenu(false)" class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left font-semibold text-slate-800 hover:bg-slate-50"><span aria-hidden="true">♥</span> Saved Jobs <span class="ml-auto rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-800 mobileSavedCount">0</span></button>
-        <a href="./contact.html" class="flex items-center gap-3 rounded-xl px-4 py-3 font-semibold text-slate-800 hover:bg-slate-50"><span aria-hidden="true">✉</span> Contact</a>
-        <details class="rounded-xl">
-          <summary class="flex cursor-pointer list-none items-center gap-3 rounded-xl px-4 py-3 font-semibold text-slate-800 hover:bg-slate-50"><span aria-hidden="true">▤</span> Legal <span class="ml-auto">⌄</span></summary>
-          <div class="ml-10 space-y-1 pb-2">
-            <a href="./privacy-policy.html" class="block rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-emerald-50">Privacy Policy</a>
-            <a href="./terms-and-conditions.html" class="block rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-emerald-50">Terms &amp; Conditions</a>
-            <a href="./cookies-policy.html" class="block rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-emerald-50">Cookies Policy</a>
-          </div>
-        </details>
-        <button type="button" onclick="handleMobileAuth()" class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left font-semibold text-slate-800 hover:bg-slate-50"><span aria-hidden="true">♙</span> <span id="mobileAuthLabel">Login</span></button>
-      </div>
-      <div class="mx-4 border-t border-slate-100 pt-4">
-        <p class="px-4 pb-2 text-xs font-bold uppercase tracking-wide text-slate-400">Share this website</p>
-        <a href="https://api.whatsapp.com/send?text=Check%20out%20this%20free%20UK%20IT%20Job%20Board%20with%20live%20tech%20roles%3A%20https%3A%2F%2Fvenubabu2620.github.io%2FUK-IT-JOBS%2F" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 rounded-xl px-4 py-3 font-medium text-slate-800 hover:bg-slate-50"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-[#25D366] text-white">●</span> WhatsApp</a>
-        <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fvenubabu2620.github.io%2FUK-IT-JOBS%2F" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 rounded-xl px-4 py-3 font-medium text-slate-800 hover:bg-slate-50"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-[#0A66C2] text-sm font-bold text-white">in</span> LinkedIn</a>
-        <button type="button" onclick="copySiteLink(); toggleMobileMenu(false)" class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left font-medium text-slate-800 hover:bg-slate-50"><span aria-hidden="true">🔗</span> Copy Link</button>
-      </div>
-      <div class="mt-auto p-5 text-xs text-slate-400">Daily UK Tech &amp; IT Opportunities</div>
-    </nav>
-  </div>
-
   <!-- Main Content -->
   <main class="max-w-6xl mx-auto px-4 py-8 flex-grow w-full">
 
@@ -379,19 +364,6 @@
         </button>
       </div>
       <div id="savedJobsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
-    </section>
-
-    <!-- Premium CV Templates promotion -->
-    <section class="mb-7 overflow-hidden rounded-2xl border border-violet-200 bg-gradient-to-r from-violet-50 via-white to-emerald-50 p-5 sm:p-7 shadow-sm">
-      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <p class="text-xs font-bold uppercase tracking-wider text-violet-700">Premium service</p>
-          <h2 class="mt-1 text-xl sm:text-2xl font-extrabold text-slate-900">UK Job CV Templates</h2>
-          <p class="mt-2 max-w-xl text-sm text-slate-600">Professional, ATS-friendly CV templates tailored to UK job applications. Preview designs, choose your role, and get an editable Word template.</p>
-          <div class="mt-3 flex flex-wrap gap-2 text-xs font-medium text-slate-600"><span>✓ UK CV format</span><span>✓ ATS-conscious layouts</span><span>✓ Role-specific</span><span>✓ £4.99 one-time</span></div>
-        </div>
-        <a href="./cv-templates.html" class="inline-flex shrink-0 items-center justify-center rounded-xl bg-emerald-600 px-5 py-3 text-sm font-bold text-white shadow-sm hover:bg-emerald-700">Browse CV Templates →</a>
-      </div>
     </section>
 
     <!-- Job Cards -->
@@ -507,7 +479,6 @@
 
     function updateSavedCount() {
       document.getElementById('savedCount').innerText = getSavedJobs().length;
-      document.querySelectorAll('.mobileSavedCount').forEach(el => el.innerText = getSavedJobs().length);
     }
 
     function showSavedJobs() {
@@ -661,42 +632,6 @@ const whatsappUrl =
       filterAndRender();
     }
 
-    function getCompanyLogoUrl(job) {
-      // Prefer a logo URL supplied by the job feed.
-      const direct = job.company_logo || job.logo_url || job.company_logo_url || job.logo;
-      if (direct && /^https?:\/\//i.test(String(direct))) return String(direct);
-
-      // If the feed has no logo, try a company-logo endpoint using a known
-      // employer domain or a conservative domain guess. If it fails, the card
-      // swaps to the company initial via the image onerror handler.
-      const company = String(job.company || '').trim();
-      const knownDomains = {
-        'motorola solutions': 'motorolasolutions.com',
-        'barclays': 'barclays.co.uk',
-        'harvey nash': 'harveynash.com',
-        'harnham': 'harnham.com',
-        'enorth staffing limited': 'enorth.com',
-        'jefferies llc': 'jefferies.com',
-        'searchability': 'searchability.com',
-        'arc it recruitment': 'arcitrecruitment.com',
-        'organox': 'organox.com',
-        'universal music holdings': 'universalmusic.com',
-        'adaptable recruitment': 'adaptablerecruitment.com'
-      };
-      const normalized = company.toLowerCase().replace(/[.,]/g, '').replace(/\s+/g, ' ').trim();
-      let domain = knownDomains[normalized];
-      if (!domain) {
-        // Guess only a simple company-name domain; errors fall back to initials.
-        const base = normalized
-          .replace(/\b(limited|ltd|llc|plc|inc|group|holdings|recruitment)\b/g, '')
-          .trim()
-          .split(/\s+/)[0]
-          .replace(/[^a-z0-9-]/g, '');
-        if (base.length >= 3) domain = base + '.com';
-      }
-      return domain ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=128` : '';
-    }
-
     function renderJobs(jobs) {
       const container = document.getElementById('jobList');
       const countEl = document.getElementById('resultsCount');
@@ -710,9 +645,13 @@ const whatsappUrl =
       container.innerHTML = jobs.map(job => {
         const title = job.title || 'Untitled role';
         const company = job.company || 'Unknown company';
-        const companyLogo = getCompanyLogoUrl(job);
         const location = job.location || 'United Kingdom';
         const description = job.job_description || 'No description available.';
+        const salary = job.salary_min && job.salary_max
+          ? `£${Number(job.salary_min).toLocaleString()} – £${Number(job.salary_max).toLocaleString()}`
+          : job.salary_max ? `Up to £${Number(job.salary_max).toLocaleString()}`
+          : job.salary_min ? `From £${Number(job.salary_min).toLocaleString()}`
+          : 'Salary not disclosed';
         const searchableDetails = `${title} ${location} ${description} ${job.job_type || ''} ${job.work_type || ''}`.toLowerCase();
         const workArrangement = /remote|work from home|work-from-home|fully distributed/.test(searchableDetails) ? 'Remote'
           : /hybrid/.test(searchableDetails) ? 'Hybrid'
@@ -738,9 +677,7 @@ const whatsappUrl =
             <div class="h-1.5 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500"></div>
             <div class="flex flex-1 flex-col p-5">
               <div class="mb-4 flex items-start gap-3">
-                <div class="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-slate-100 bg-slate-50 p-1.5">
-                  ${companyLogo ? `<img src="${escapeHtml(companyLogo)}" alt="${escapeHtml(company)} logo" loading="lazy" class="h-full w-full object-contain" onerror="this.onerror=null;const fallback=document.createElement('span');fallback.className='flex h-full w-full items-center justify-center rounded-lg bg-slate-50 text-lg font-bold text-emerald-700';fallback.textContent=(this.dataset.initial||'?');this.replaceWith(fallback);" data-initial="${escapeHtml((company.trim().charAt(0) || '?').toUpperCase())}">` : `<span class="flex h-full w-full items-center justify-center rounded-lg bg-slate-50 text-lg font-bold text-emerald-700">${escapeHtml((company.trim().charAt(0) || '?').toUpperCase())}</span>`}
-                </div>
+                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-slate-100 bg-slate-50 text-lg font-extrabold text-emerald-700">${escapeHtml(company.slice(0, 1).toUpperCase())}</div>
                 <div class="min-w-0 flex-1">
                   <h3 class="break-words whitespace-normal text-base font-bold leading-6 text-slate-900">${escapeHtml(title)}</h3>
                   <p class="mt-1 text-sm font-semibold text-emerald-700">${escapeHtml(company)}</p>
@@ -751,6 +688,11 @@ const whatsappUrl =
                 <span class="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1.5 text-slate-600">📍 ${escapeHtml(location)}</span>
                 ${workArrangement ? `<span class="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1.5 font-medium text-emerald-700">🏠 ${workArrangement}</span>` : ''}
                 ${job.job_type ? `<span class="inline-flex items-center gap-1 rounded-full bg-indigo-50 px-2.5 py-1.5 text-indigo-700">💼 ${escapeHtml(job.job_type)}</span>` : ''}
+              </div>
+
+              <div class="mb-4 rounded-xl border border-emerald-100 bg-emerald-50/70 px-3.5 py-3">
+                <p class="mb-0.5 text-[11px] font-semibold uppercase tracking-wide text-emerald-700">Salary</p>
+                <p class="text-sm font-bold text-slate-800">💷 ${escapeHtml(salary)}</p>
               </div>
 
               ${tags.length ? `<div class="mb-4 flex flex-wrap gap-1.5">${tags.map(tag => `<span class="rounded-full border border-blue-100 bg-blue-50 px-2.5 py-1 text-[11px] font-medium text-blue-700">${escapeHtml(tag)}</span>`).join('')}</div>` : ''}
@@ -888,23 +830,7 @@ const whatsappUrl =
 
       });
     }
-function toggleMobileMenu(open) {
-      const overlay = document.getElementById('mobileMenuOverlay');
-      const button = document.querySelector('.mobile-menu-button');
-      if (!overlay) return;
-      overlay.classList.toggle('is-open', open);
-      overlay.setAttribute('aria-hidden', String(!open));
-      document.body.classList.toggle('mobile-menu-open', open);
-      if (button) button.setAttribute('aria-expanded', String(open));
-    }
-
-    function handleMobileAuth() {
-      toggleMobileMenu(false);
-      const authButton = document.getElementById('authButton');
-      if (authButton) authButton.click();
-    }
-
-    // ===== Google-only authentication =====
+// ===== Google-only authentication =====
     function showAuthMessage(message, isError = false) {
       const element = document.getElementById('loginPageMessage');
       if (!element) return;
@@ -944,8 +870,6 @@ function toggleMobileMenu(open) {
         loginPage.classList.add('hidden');
         appContent.classList.remove('hidden');
         if (text) text.textContent = user.email ? user.email.split('@')[0] : 'Sign out';
-        const mobileAuthLabel = document.getElementById('mobileAuthLabel');
-        if (mobileAuthLabel) mobileAuthLabel.textContent = 'Sign out';
         if (button) {
           button.onclick = signOutUser;
           button.title = 'Click to sign out';
@@ -956,8 +880,6 @@ function toggleMobileMenu(open) {
         appContent.classList.add('hidden');
         loginPage.classList.remove('hidden');
         if (text) text.textContent = 'Sign in with Google';
-        const mobileAuthLabel = document.getElementById('mobileAuthLabel');
-        if (mobileAuthLabel) mobileAuthLabel.textContent = 'Login';
         if (button) {
           button.onclick = signInWithGoogle;
           button.title = 'Sign in with Google';
@@ -982,6 +904,10 @@ function toggleMobileMenu(open) {
 
       supabaseClient.auth.onAuthStateChange((event, session) => {
         updateAuthUI(session?.user || null);
+      });
+      // Refresh the UI when the same Supabase session changes in another tab/page.
+      window.addEventListener('storage', (event) => {
+        if (event.key && event.key.includes('auth-token')) initialiseAuth();
       });
     }
 
