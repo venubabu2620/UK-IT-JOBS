@@ -52,9 +52,69 @@ async function extractFile(file){if(file.size>8*1024*1024)throw new Error('Pleas
 $('cvFile').addEventListener('change',async e=>{const file=e.target.files[0];if(!file)return;try{setStatus('Reading your CV...');const text=await extractFile(file);if(!text)throw new Error('No readable text was found. Try a text-based PDF or DOCX.');$('cvText').value=text;$('fileName').textContent='Selected: '+file.name;setStatus('CV text extracted. Add a job description and analyse.');}catch(err){setStatus(err.message,true);}});
 const dz=$('dropzone');['dragenter','dragover'].forEach(n=>dz.addEventListener(n,e=>{e.preventDefault();dz.classList.add('drag');}));['dragleave','drop'].forEach(n=>dz.addEventListener(n,e=>{e.preventDefault();dz.classList.remove('drag');}));dz.addEventListener('drop',e=>{const f=e.dataTransfer.files[0];if(f){const transfer=new DataTransfer();transfer.items.add(f);$('cvFile').files=transfer.files;$('cvFile').dispatchEvent(new Event('change'));}});
 document.querySelectorAll('.feature-tab').forEach(btn=>btn.addEventListener('click',()=>{activeTab=btn.dataset.tab;document.querySelectorAll('.feature-tab').forEach(b=>{b.classList.remove('tab-active','border-emerald-700');b.classList.add('bg-white');});btn.classList.add('tab-active','border-emerald-700');btn.classList.remove('bg-white');const labels={analyse:'Analyse my CV',optimise:'Optimise my CV',keywords:'Find missing keywords',generate:'Generate ATS-friendly CV'};$('runBtn').textContent=labels[activeTab];}));
-function renderResults(a){$('emptyState').classList.add('hidden');$('results').classList.remove('hidden');const score=Math.max(0,Math.min(100,Number(a.ats_score)||0));const list=(title,items,emptyMessage='No items returned.')=>`<section><h3 class="mb-2 font-bold">${title}</h3>${Array.isArray(items)&&items.length?`<ul class="list-disc space-y-1 pl-5 text-sm text-slate-600">${items.map(x=>`<li>${escapeHtml(x)}</li>`).join('')}</ul>`:`<p class="text-sm text-slate-400">${emptyMessage}</p>`}</section>`;$('results').innerHTML=`<div class="rounded-2xl bg-emerald-50 p-5"><div class="flex items-center justify-between"><div><p class="text-xs font-bold uppercase tracking-wide text-emerald-700">ATS readiness score</p><p class="mt-1 text-4xl font-extrabold text-emerald-800">${score}<span class="text-lg">/100</span></p></div><div class="flex h-20 w-20 items-center justify-center rounded-full border-8 border-emerald-200 text-xl font-bold text-emerald-800">${score}%</div></div><p class="mt-3 text-sm text-slate-700">${escapeHtml(a.summary||'Analysis complete.')}</p></div>${list('Strengths',a.strengths)}${list('Areas to improve',a.weaknesses)}${list('Matched keywords',a.matched_keywords)}${list('Missing keywords',a.missing_keywords,'No missing keywords were returned. Try again with a detailed job description, or check the function response in Supabase logs.')}${list('Recommended improvements',a.improvement_suggestions)}${a.optimised_cv?`<section><h3 class="mb-2 font-bold">Optimised CV draft</h3><pre class="whitespace-pre-wrap rounded-xl bg-slate-50 p-4 text-sm">${escapeHtml(a.optimised_cv)}</pre><button id="downloadCv" class="mt-2 w-full rounded-xl bg-emerald-700 px-4 py-3 text-sm font-bold text-white">Download optimised CV (.txt)</button></section>`:''}${a.generated_cv?`<section><h3 class="mb-2 font-bold">Generated ATS-friendly CV</h3><pre class="whitespace-pre-wrap rounded-xl bg-slate-50 p-4 text-sm">${escapeHtml(a.generated_cv)}</pre><button id="downloadCv" class="mt-2 w-full rounded-xl bg-emerald-700 px-4 py-3 text-sm font-bold text-white">Download generated CV (.txt)</button></section>`:''}<button id="downloadReport" class="w-full rounded-xl border border-emerald-700 px-4 py-3 text-sm font-bold text-emerald-800 hover:bg-emerald-50">Download analysis report (.txt)</button>`;const cvOutput=a.optimised_cv||a.generated_cv;if(cvOutput)$('downloadCv').addEventListener('click',()=>downloadText('ats-friendly-cv.txt',cvOutput));$('downloadReport').addEventListener('click',()=>downloadText('cv-analysis-report.txt',JSON.stringify(a,null,2)));}
+function renderResults(a, action = 'analyse'){
+  $('emptyState').classList.add('hidden');
+  $('results').classList.remove('hidden');
+
+  const list=(title,items,emptyMessage='No items returned.')=>
+    `<section><h3 class="mb-2 font-bold">${title}</h3>${
+      Array.isArray(items)&&items.length
+        ? `<ul class="list-disc space-y-1 pl-5 text-sm text-slate-600">${items.map(x=>`<li>${escapeHtml(x)}</li>`).join('')}</ul>`
+        : `<p class="text-sm text-slate-400">${emptyMessage}</p>`
+    }</section>`;
+
+  const panel=(title,content)=>`<section><h3 class="mb-2 font-bold">${title}</h3>${content}</section>`;
+  const downloadButton=(label,filename,value)=>`
+    <button id="downloadCv" class="mt-3 w-full rounded-xl bg-emerald-700 px-4 py-3 text-sm font-bold text-white">${label}</button>`;
+
+  let html='';
+
+  if(action==='optimise'){
+    if(!a.optimised_cv){
+      html=`<p class="rounded-xl bg-amber-50 p-4 text-sm text-amber-800">The function did not return an optimised CV. Please check that the latest cv-analyser Edge Function is deployed and returns the <code>optimised_cv</code> field.</p>`;
+    }else{
+      html+=`<div class="rounded-2xl bg-emerald-50 p-4"><h3 class="font-bold text-emerald-800">Your optimised CV is ready</h3><p class="mt-1 text-sm text-slate-700">${escapeHtml(a.summary||'Your CV has been tailored to the job description. Please review all details for accuracy.')}</p></div>`;
+      html+=`<pre class="whitespace-pre-wrap rounded-xl bg-slate-50 p-4 text-sm">${escapeHtml(a.optimised_cv)}</pre>`;
+      html+=downloadButton('Download optimised CV (.txt)','optimised-cv.txt',a.optimised_cv);
+    }
+  }else if(action==='keywords'){
+    html+=`<div class="rounded-2xl bg-emerald-50 p-4"><h3 class="font-bold text-emerald-800">Keyword match results</h3><p class="mt-1 text-sm text-slate-700">${escapeHtml(a.summary||'Keywords identified from your CV and the job description.')}</p></div>`;
+    html+=list('Matched keywords',a.matched_keywords,'No matched keywords were returned.');
+    html+=list('Missing keywords',a.missing_keywords,'No missing keywords were returned. This may mean the CV already covers the identified keywords.');
+    if(Array.isArray(a.improvement_suggestions)&&a.improvement_suggestions.length){
+      html+=list('How to address the gaps',a.improvement_suggestions);
+    }
+  }else if(action==='generate'){
+    if(!a.generated_cv){
+      html=`<p class="rounded-xl bg-amber-50 p-4 text-sm text-amber-800">The function did not return a generated CV. Please check that the latest cv-analyser Edge Function is deployed and returns the <code>generated_cv</code> field.</p>`;
+    }else{
+      html+=`<div class="rounded-2xl bg-emerald-50 p-4"><h3 class="font-bold text-emerald-800">Your ATS-friendly CV is ready</h3><p class="mt-1 text-sm text-slate-700">${escapeHtml(a.summary||'Review the CV carefully and confirm that all details are accurate.')}</p></div>`;
+      html+=`<pre class="whitespace-pre-wrap rounded-xl bg-slate-50 p-4 text-sm">${escapeHtml(a.generated_cv)}</pre>`;
+      html+=downloadButton('Download generated CV (.txt)','generated-cv.txt',a.generated_cv);
+    }
+  }else{
+    const score=Math.max(0,Math.min(100,Number(a.ats_score)||0));
+    html+=`<div class="rounded-2xl bg-emerald-50 p-5"><div class="flex items-center justify-between"><div><p class="text-xs font-bold uppercase tracking-wide text-emerald-700">ATS readiness score</p><p class="mt-1 text-4xl font-extrabold text-emerald-800">${score}<span class="text-lg">/100</span></p></div><div class="flex h-20 w-20 items-center justify-center rounded-full border-8 border-emerald-200 text-xl font-bold text-emerald-800">${score}%</div></div><p class="mt-3 text-sm text-slate-700">${escapeHtml(a.summary||'Analysis complete.')}</p></div>`;
+    html+=list('Strengths',a.strengths);
+    html+=list('Areas to improve',a.weaknesses);
+    html+=list('Matched keywords',a.matched_keywords);
+    html+=list('Missing keywords',a.missing_keywords,'No missing keywords were returned.');
+    html+=list('Recommended improvements',a.improvement_suggestions);
+    html+=`<button id="downloadReport" class="w-full rounded-xl border border-emerald-700 px-4 py-3 text-sm font-bold text-emerald-800 hover:bg-emerald-50">Download analysis report (.txt)</button>`;
+  }
+
+  $('results').innerHTML=html;
+
+  if(action==='optimise'&&a.optimised_cv){
+    $('downloadCv').addEventListener('click',()=>downloadText('optimised-cv.txt',a.optimised_cv));
+  }else if(action==='generate'&&a.generated_cv){
+    $('downloadCv').addEventListener('click',()=>downloadText('generated-cv.txt',a.generated_cv));
+  }else if(action==='analyse'&&$('downloadReport')){
+    $('downloadReport').addEventListener('click',()=>downloadText('cv-analysis-report.txt',JSON.stringify(a,null,2)));
+  }
+}
 function downloadText(name,text){const blob=new Blob([text],{type:'text/plain;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;a.click();URL.revokeObjectURL(url);}
-$('runBtn').addEventListener('click',async()=>{const cvText=$('cvText').value.trim();const jobDescription=$('jobDescription').value.trim();if(!cvText){setStatus('Please upload your CV or paste your CV text.',true);return;}if(!jobDescription){setStatus('Please paste the job description so the CV can be assessed against the role.',true);return;}if(cvText.length>30000||jobDescription.length>20000){setStatus('CV or job description is longer than the supported limit.',true);return;}const btn=$('runBtn');btn.disabled=true;btn.textContent='Working...';setStatus('AI is processing your request. This may take a few moments.');try{const {data,error}=await supabaseClient.functions.invoke(FUNCTION_NAME,{body:{cvText,jobDescription,action:activeTab}});if(error)throw error; if(!data?.success)throw new Error(data?.error||'Analysis failed. Please try again.');const result=data.analysis||data.result||{};const successMessages={analyse:'ATS analysis complete.',optimise:result.optimised_cv?'CV optimisation complete. Review your updated CV below.':'The analysis completed, but no optimised CV was returned. Please check the deployed Edge Function code.',keywords:'Keyword analysis complete. Review the matched and missing keywords below.',generate:result.generated_cv?'Your ATS-friendly CV has been generated. Review it below.':'The request completed, but no generated CV was returned. Please check the deployed Edge Function code.'};setStatus(successMessages[activeTab]||'Processing complete.',!((activeTab==='optimise'&&result.optimised_cv)||(activeTab==='generate'&&result.generated_cv)||activeTab==='analyse'||activeTab==='keywords'));renderResults(result);}catch(err){console.error(err);setStatus(err.message||'Something went wrong. Please try again.',true);}finally{btn.disabled=false;const labels={analyse:'Analyse my CV',optimise:'Optimise my CV',keywords:'Find missing keywords',generate:'Generate ATS-friendly CV'};btn.textContent=labels[activeTab];}});
+$('runBtn').addEventListener('click',async()=>{const cvText=$('cvText').value.trim();const jobDescription=$('jobDescription').value.trim();if(!cvText){setStatus('Please upload your CV or paste your CV text.',true);return;}if(!jobDescription){setStatus('Please paste the job description so the CV can be assessed against the role.',true);return;}if(cvText.length>30000||jobDescription.length>20000){setStatus('CV or job description is longer than the supported limit.',true);return;}const btn=$('runBtn');btn.disabled=true;btn.textContent='Working...';setStatus('AI is processing your request. This may take a few moments.');try{const {data,error}=await supabaseClient.functions.invoke(FUNCTION_NAME,{body:{cvText,jobDescription,action:activeTab}});if(error)throw error; if(!data?.success)throw new Error(data?.error||'Analysis failed. Please try again.');const result=data.analysis||data.result||{};const successMessages={analyse:'ATS analysis complete.',optimise:result.optimised_cv?'CV optimisation complete. Review your updated CV below.':'The analysis completed, but no optimised CV was returned. Please check the deployed Edge Function code.',keywords:'Keyword analysis complete. Review the matched and missing keywords below.',generate:result.generated_cv?'Your ATS-friendly CV has been generated. Review it below.':'The request completed, but no generated CV was returned. Please check the deployed Edge Function code.'};setStatus(successMessages[activeTab]||'Processing complete.',!((activeTab==='optimise'&&result.optimised_cv)||(activeTab==='generate'&&result.generated_cv)||activeTab==='analyse'||activeTab==='keywords'));renderResults(result, activeTab);}catch(err){console.error(err);setStatus(err.message||'Something went wrong. Please try again.',true);}finally{btn.disabled=false;const labels={analyse:'Analyse my CV',optimise:'Optimise my CV',keywords:'Find missing keywords',generate:'Generate ATS-friendly CV'};btn.textContent=labels[activeTab];}});
 requireSession();
 </script>
 </body></html>
